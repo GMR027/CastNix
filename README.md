@@ -7,6 +7,10 @@ acceso a **Google Cast** (GNOME Network Displays).
 Pensado para GNOME en Wayland, probado en Fedora 42 (Apple Silicon) con una LG
 webOS, pero el instalador también cubre Debian/Ubuntu y Arch.
 
+La presentación del proyecto está en [`index.html`](index.html): ábrela en el
+navegador o actívala con GitHub Pages (Settings → Pages → rama `main`, carpeta
+raíz).
+
 ## Instalación en un comando
 
 ```bash
