@@ -41,7 +41,9 @@ ASSUME_YES=0
 IP=""
 TV_NAME=""
 
-usage() { sed -n '2,24p' "${BASH_SOURCE[0]}"; }
+usage() {
+  awk 'NR > 1 && /^#/ { sub(/^# ?/, ""); print; next } NR > 1 { exit }' "${BASH_SOURCE[0]}"
+}
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -336,10 +338,16 @@ fi
 # Emparejamiento (solo si hay AirPlay y no hay credenciales)
 # --------------------------------------------------------------------------
 pair_tv() {
-  local ip="$1" pid wd
-  printf 'Se mostrará un PIN de 4 dígitos en la TV. Escríbelo aquí y pulsa Enter.\n'
+  local ip="$1" pid wd before now
+  before="$(md5sum "$CREDS" 2>/dev/null | cut -d' ' -f1 || true)"
+  printf 'Se mostrará un PIN de 4 dígitos en la TV (tienes 3 minutos). Escríbelo aquí y pulsa Enter.\n'
   ( for _ in $(seq 1 180); do
-      [ -f "$CREDS" ] && break
+      now="$(md5sum "$CREDS" 2>/dev/null | cut -d' ' -f1 || true)"
+      if [ -n "$before" ]; then
+        [ "$now" != "$before" ] && break
+      else
+        [ -n "$now" ] && break
+      fi
       sleep 1
     done
     sleep 3

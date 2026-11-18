@@ -13,11 +13,12 @@ set -uo pipefail
 # Configuración escrita por install.sh (KEY=valor, sin comillas). Sirve para
 # recordar qué TV elegir cuando en la red hay más de una.
 CONF="${XDG_CONFIG_HOME:-$HOME/.config}/compartir-tv.conf"
+CONF_TV_TARGET=""
 if [ -r "$CONF" ]; then
   while IFS='=' read -r key value; do
     case "$key" in
       TV_SHARE_NAME)   : "${TV_SHARE_NAME:=$value}" ;;
-      TV_SHARE_TARGET) : "${TV_SHARE_TARGET:=$value}" ;;
+      TV_SHARE_TARGET) CONF_TV_TARGET="$value"; : "${TV_SHARE_TARGET:=$value}" ;;
     esac
   done < "$CONF"
 fi
@@ -69,6 +70,13 @@ if [ -z "$IP" ]; then
 fi
 if [ -z "$IP" ]; then
   IP="$(timeout 1 getent hosts "${TV_SHARE_HOST:-LGwebOSTV.local}" 2>/dev/null | awk '{print $1}')"
+fi
+# Si la IP guardada por el instalador ya no responde (el router dio otra),
+# se vuelve a buscar por mDNS en lugar de fallar.
+if [ -n "$IP" ] && [ -n "$CONF_TV_TARGET" ] && [ "$IP" = "$CONF_TV_TARGET" ] &&
+   ! timeout 2 ping -c 1 -W 1 "$IP" >/dev/null 2>&1; then
+  echo "La TV guardada ($IP) no responde; se busca de nuevo por mDNS."
+  IP=""
 fi
 # El nombre .local no siempre resuelve, pero la TV se anuncia por mDNS. Se busca
 # primero AirPlay y luego Google Cast (campo 8 = dirección en avahi-browse -p).
