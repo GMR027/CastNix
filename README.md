@@ -128,3 +128,9 @@ compartir-tv/
 ├── applications/compartir-tv.desktop.in
 └── doubletake-src/            # doubletake + parche local + vendor/
 ```
+
+## Licencia
+
+GPL-3.0. `doubletake-src/` conserva su licencia original (GPL-3.0, ver
+`doubletake-src/LICENSE`); el resto del proyecto se distribuye bajo los mismos
+términos para que el conjunto sea coherente.

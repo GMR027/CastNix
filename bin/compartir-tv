@@ -6,7 +6,7 @@
 #   TV_SHARE_LOG      ruta del registro (por defecto ~/.cache/compartir-tv.log)
 #   TV_SHARE_DRY_RUN  =1 para probar el botón sin transmitir a la TV
 #   TV_SHARE_TARGET   IP o nombre de la TV (si mDNS no la encuentra)
-#   TV_SHARE_NAME     parte del nombre del servicio mDNS, p. ej. "65UR7800"
+#   TV_SHARE_NAME     parte del nombre del servicio mDNS, p. ej. "LG"
 #   TV_SHARE_HOST     nombre .local a probar (por defecto LGwebOSTV.local)
 set -uo pipefail
 

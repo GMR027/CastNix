@@ -40,6 +40,7 @@ NO_DEPS=0
 ASSUME_YES=0
 IP=""
 TV_NAME=""
+SAVE_TV=0
 
 usage() {
   awk 'NR > 1 && /^#/ { sub(/^# ?/, ""); print; next } NR > 1 { exit }' "${BASH_SOURCE[0]}"
@@ -272,6 +273,7 @@ discover_tvs() {
 step "Buscando la TV en la red"
 if [ -n "$TARGET" ]; then
   IP="$TARGET"
+  SAVE_TV=1
   ok "TV indicada a mano: $IP"
 else
   TVLIST="$(mktemp)"
@@ -281,12 +283,14 @@ else
     warn "no encontré ninguna TV por mDNS"
     if have_tty && [ "$ASSUME_YES" = 0 ]; then
       IP="$(ask_value 'Escribe la IP de la TV (Enter para omitir):')"
+      [ -n "$IP" ] && SAVE_TV=1
     fi
   elif [ "$TVNUM" -eq 1 ]; then
     IP="$(cut -f1 "$TVLIST")"
     TV_NAME="$(cut -f2 "$TVLIST")"
     ok "TV: $TV_NAME ($IP)"
   else
+    SAVE_TV=1
     printf 'TVs encontradas:\n'
     awk -F'\t' '{printf "  %d) %s (%s)\n", NR, $2, $1}' "$TVLIST"
     if have_tty && [ "$ASSUME_YES" = 0 ]; then
@@ -378,7 +382,7 @@ elif [ -n "$IP" ] && [ "$WAIT_AIRPLAY" = 1 ] && [ "$NO_PAIR" = 0 ]; then
 fi
 
 # Recordar la TV elegida para que el botón no dependa de mDNS.
-if [ -n "$IP" ] && [ "$TARGET" != "" ]; then
+if [ -n "$IP" ] && [ "$SAVE_TV" = 1 ]; then
   install -d "$(dirname "$TV_CONF")"
   printf 'TV_SHARE_TARGET=%s\n' "$IP" >"$TV_CONF"
   ok "TV fijada en $TV_CONF"

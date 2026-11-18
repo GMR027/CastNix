@@ -15,6 +15,7 @@ rm -f "$BINDIR/compartir-tv" "$BINDIR/check-tv-share.sh" \
       "$BINDIR/doubletake" "$BINDIR/doubletake-ctl"
 rm -rf "$GEXT"
 rm -f "$HOME/.local/share/applications/compartir-tv.desktop"
+rm -f "$HOME/.config/compartir-tv.conf"
 
 echo "Desinstalado. Siguen en disco (bórralos si ya no los quieres):"
 echo "  ~/.config/doubletake/    credenciales de la TV"

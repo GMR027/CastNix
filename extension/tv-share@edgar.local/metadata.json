@@ -3,6 +3,5 @@
   "name": "Compartir pantalla a la TV",
   "description": "Añade un botón al menú rápido de GNOME para espejar la pantalla por AirPlay (doubletake) o abrir Google Cast (GNOME Network Displays).",
   "shell-version": ["48"],
-  "version": 1,
-  "url": "https://github.com/domenkozar/doubletake"
+  "version": 1
 }
