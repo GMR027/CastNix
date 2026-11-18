@@ -1,5 +1,5 @@
 PREFIX ?= $(HOME)/.local
-NAME   := compartir-tv
+NAME   := castnix
 ROOT   := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 DIST   := $(ROOT)/../$(NAME)-$(shell date +%Y%m%d).tar.gz
 

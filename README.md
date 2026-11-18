@@ -1,4 +1,4 @@
-# Compartir pantalla a la TV
+# CastNix
 
 Espeja el escritorio de Linux a una TV por **AirPlay** (doubletake) y añade un
 botón **"Compartir TV"** al menú rápido de GNOME, con interruptor de AirPlay y
@@ -10,8 +10,8 @@ webOS, pero el instalador también cubre Debian/Ubuntu y Arch.
 ## Instalación en un comando
 
 ```bash
-git clone <URL-DEL-REPOSITORIO> compartir-tv
-cd compartir-tv
+git clone https://github.com/GMR027/CastNix.git
+cd CastNix
 ./install.sh
 ```
 
@@ -45,8 +45,8 @@ Al terminar, **cierra sesión y vuelve a entrar** si el botón aún no aparece.
 También se puede ejecutar el script sin clonar el repo:
 
 ```bash
-REPO_URL=https://github.com/usuario/compartir-tv.git bash <(curl -fsSL \
-  https://raw.githubusercontent.com/usuario/compartir-tv/main/install.sh)
+REPO_URL=https://github.com/GMR027/CastNix.git bash <(curl -fsSL \
+  https://raw.githubusercontent.com/GMR027/CastNix/main/install.sh)
 ```
 
 Desinstalar: `./uninstall.sh`.
@@ -115,7 +115,7 @@ gst-inspect-1.0 x264enc              # debe existir
 ## Estructura
 
 ```
-compartir-tv/
+CastNix/
 ├── install.sh                 # instalación de una pasada
 ├── uninstall.sh
 ├── Makefile                   # make install / uninstall / dist
