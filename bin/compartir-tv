@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+# Comparte la pantalla de este equipo a la TV del salón por AirPlay (doubletake).
+# Uso: compartir-tv [-no-audio] [otros flags de doubletake]
+#
+# Variables utiles:
+#   TV_SHARE_LOG      ruta del registro (por defecto ~/.cache/compartir-tv.log)
+#   TV_SHARE_DRY_RUN  =1 para probar el botón sin transmitir a la TV
+#   TV_SHARE_TARGET   IP o nombre de la TV (si mDNS no la encuentra)
+#   TV_SHARE_NAME     parte del nombre del servicio mDNS, p. ej. "65UR7800"
+#   TV_SHARE_HOST     nombre .local a probar (por defecto LGwebOSTV.local)
+set -uo pipefail
+
+# Configuración escrita por install.sh (KEY=valor, sin comillas). Sirve para
+# recordar qué TV elegir cuando en la red hay más de una.
+CONF="${XDG_CONFIG_HOME:-$HOME/.config}/compartir-tv.conf"
+if [ -r "$CONF" ]; then
+  while IFS='=' read -r key value; do
+    case "$key" in
+      TV_SHARE_NAME)   : "${TV_SHARE_NAME:=$value}" ;;
+      TV_SHARE_TARGET) : "${TV_SHARE_TARGET:=$value}" ;;
+    esac
+  done < "$CONF"
+fi
+
+LOG="${TV_SHARE_LOG:-$HOME/.cache/compartir-tv.log}"
+mkdir -p "$(dirname "$LOG")" 2>/dev/null || true
+
+# gnome-shell silencia la salida de los procesos que lanza, así que dejamos
+# constancia en un log. Si se ejecuta desde una terminal, se ve también allí.
+if [ -t 1 ]; then
+  exec > >(tee -a "$LOG") 2>&1
+else
+  exec >>"$LOG" 2>&1
+fi
+
+echo "== $(date '+%F %T') compartir-tv (pid $$) =="
+
+DOUBLETAKE="$HOME/.local/bin/doubletake"
+[ -x "$DOUBLETAKE" ] || DOUBLETAKE="$(command -v doubletake || true)"
+if [ -z "${DOUBLETAKE:-}" ]; then
+  echo "No se encontró el binario doubletake" >&2
+  exit 1
+fi
+
+# gnome-shell no exporta WAYLAND_DISPLAY/DISPLAY a sus procesos hijos, así que
+# al lanzar esto desde el botón de Quick Settings doubletake no detectaba
+# servidor gráfico. Los reconstruimos a partir del runtime dir del usuario.
+RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+export XDG_RUNTIME_DIR="$RUNTIME_DIR"
+if [ -z "${WAYLAND_DISPLAY:-}" ]; then
+  for sock in "$RUNTIME_DIR"/wayland-*; do
+    [ -S "$sock" ] || continue
+    case "$sock" in *.lock) continue ;; esac
+    export WAYLAND_DISPLAY="${sock##*/}"
+    break
+  done
+fi
+if [ -z "${DISPLAY:-}" ] && [ -S /tmp/.X11-unix/X0 ]; then
+  export DISPLAY=:0
+fi
+
+# Resolución de la TV. En otro equipo cambian la IP y el nombre, así que se
+# pueden fijar con TV_SHARE_TARGET / TV_SHARE_NAME. Con timeout: si mDNS no
+# responde, avahi-resolve puede quedarse colgado y el botón se quedaría
+# "encendido" sin transmitir nunca.
+IP="${TV_SHARE_TARGET:-}"
+if [ -z "$IP" ]; then
+  IP="$(timeout 1 avahi-resolve -4 -n "${TV_SHARE_HOST:-LGwebOSTV.local}" 2>/dev/null | awk '{print $2}')"
+fi
+if [ -z "$IP" ]; then
+  IP="$(timeout 1 getent hosts "${TV_SHARE_HOST:-LGwebOSTV.local}" 2>/dev/null | awk '{print $1}')"
+fi
+# El nombre .local no siempre resuelve, pero la TV se anuncia por mDNS. Se busca
+# primero AirPlay y luego Google Cast (campo 8 = dirección en avahi-browse -p).
+mdns_ip() {
+  timeout 3 avahi-browse -rtp "$1" 2>/dev/null |
+    awk -F';' -v want="${TV_SHARE_NAME:-}" \
+      '/^=;/ && (want == "" || index(tolower($4), tolower(want))) {print $8; exit}'
+}
+[ -n "$IP" ] || IP="$(mdns_ip _airplay._tcp)"
+[ -n "$IP" ] || IP="$(mdns_ip _googlecast._tcp)"
+
+echo "Servidor gráfico: WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-no} DISPLAY=${DISPLAY:-no}"
+if [ -z "$IP" ]; then
+  echo "ERROR: no encuentro ninguna TV por mDNS en esta red."
+  echo "       Indica su IP a mano:  TV_SHARE_TARGET=192.168.1.50 compartir-tv"
+  exit 3
+fi
+echo "TV: $IP"
+
+if [ "${TV_SHARE_DRY_RUN:-0}" = "1" ]; then
+  echo "Modo de prueba (TV_SHARE_DRY_RUN=1): no se transmite, solo se mantiene el proceso."
+  exec sleep 600
+fi
+
+# Comprobación previa: si AirPlay está apagado en la TV, el puerto 7000 rechaza
+# la conexión y doubletake solo diría "connection refused", que no explica nada.
+port_open() {
+  timeout 2 bash -c "exec 3<>/dev/tcp/$1/$2" 2>/dev/null
+}
+
+if ! port_open "$IP" 7000; then
+  if timeout 2 ping -c 1 -W 1 "$IP" >/dev/null 2>&1; then
+    echo "ERROR: la TV ($IP) está encendida y en la red, pero AirPlay está APAGADO en el televisor."
+    echo "       No es un problema de este equipo: nadie escucha en el puerto 7000."
+    echo "       Actívalo en la TV con el mando:"
+    echo "         Inicio → Panel de inicio (Home Dashboard) → AirPlay →"
+    echo "         AirPlay y HomeKit → AirPlay: Activado"
+    echo "       Luego vuelve a pulsar el botón. No hace falta reiniciar sesión."
+  else
+    echo "ERROR: la TV no responde en $IP. Comprueba que está encendida y en la misma red Wi-Fi."
+  fi
+  exit 2
+fi
+
+echo "Compartiendo pantalla a la TV en $IP ... (Ctrl+C para detener)"
+exec "$DOUBLETAKE" -target "$IP" "$@"

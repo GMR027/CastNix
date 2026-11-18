@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Compartir pantalla (AirPlay)
+Comment=Envía el escritorio a la TV por AirPlay con doubletake
+Exec=@BIN@
+Icon=video-display-symbolic
+Terminal=true
+Categories=Network;AudioVideo;
+Keywords=airplay;tv;pantalla;cast;espejo;
