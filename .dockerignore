@@ -1,0 +1,5 @@
+# Solo entran en la imagen index.html, assets/ y deploy/nginx.conf.
+*
+!index.html
+!assets/
+!deploy/nginx.conf
