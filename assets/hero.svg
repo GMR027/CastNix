@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" role="img" aria-label="Un portátil comparte su escritorio con un televisor de salón">
+  <defs>
+    <radialGradient id="h-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#648ce9" stop-opacity=".26"/>
+      <stop offset="0.55" stop-color="#6385d5" stop-opacity=".09"/>
+      <stop offset="1" stop-color="#6385d5" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="h-plate" x1="0" y1="0" x2="0.7" y2="1">
+      <stop offset="0" stop-color="#191b20"/>
+      <stop offset="1" stop-color="#121317"/>
+    </linearGradient>
+    <linearGradient id="h-tv" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0" stop-color="#2b2f37"/>
+      <stop offset="1" stop-color="#191b20"/>
+    </linearGradient>
+    <linearGradient id="h-lap" x1="0" y1="0" x2="0.6" y2="1">
+      <stop offset="0" stop-color="#2c3038"/>
+      <stop offset="1" stop-color="#1b1d22"/>
+    </linearGradient>
+    <linearGradient id="h-console" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#242d42"/>
+      <stop offset="1" stop-color="#141b2b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- placa -->
+  <rect x="24" y="18" width="852" height="576" rx="22" fill="url(#h-plate)" stroke="#2b2e35"/>
+  <circle cx="520" cy="230" r="300" fill="url(#h-glow)"/>
+
+  <!-- suelo -->
+  <path d="M72 560h756" stroke="#333740" stroke-width="1.4" stroke-linecap="round"/>
+  <ellipse cx="470" cy="554" rx="250" ry="11" fill="#0b0d10" opacity=".5"/>
+
+  <!-- consola -->
+  <rect x="80" y="474" width="720" height="15" rx="4" fill="url(#h-console)" stroke="#34415f"/>
+  <path d="M88 476h704" stroke="#3f517a" stroke-width="1" opacity=".55"/>
+  <path d="M132 489v59M748 489v59" stroke="#27324d" stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M112 510h640" stroke="#1b243a" stroke-width="1" opacity=".8"/>
+  <ellipse cx="520" cy="474" rx="150" ry="5" fill="#648ce9" opacity=".07"/>
+
+  <!-- televisor -->
+  <rect x="300" y="104" width="440" height="278" rx="9" fill="#0f1114" stroke="#606673" stroke-width="1.6"/>
+  <rect x="312" y="116" width="416" height="254" rx="3" fill="url(#h-tv)" stroke="#3e434e"/>
+
+  <!-- escritorio espejado -->
+  <rect x="312" y="116" width="416" height="26" fill="#2c3038"/>
+  <circle cx="331" cy="129" r="3" fill="#648ce9"/>
+  <circle cx="342" cy="129" r="2.4" fill="#636978"/>
+  <circle cx="351" cy="129" r="2.4" fill="#636978"/>
+  <rect x="672" y="125" width="28" height="4" rx="2" fill="#4d525e"/>
+  <rect x="312" y="142" width="58" height="228" fill="#24272e"/>
+  <rect x="324" y="158" width="10" height="10" rx="2" fill="#648ce9" opacity=".9"/>
+  <rect x="342" y="160" width="18" height="5" rx="2" fill="#454a56"/>
+  <rect x="324" y="182" width="10" height="10" rx="2" fill="#454a56"/>
+  <rect x="342" y="184" width="16" height="5" rx="2" fill="#3b404b"/>
+  <rect x="324" y="206" width="10" height="10" rx="2" fill="#454a56"/>
+  <rect x="342" y="208" width="20" height="5" rx="2" fill="#3b404b"/>
+  <rect x="324" y="230" width="10" height="10" rx="2" fill="#454a56"/>
+  <rect x="342" y="232" width="14" height="5" rx="2" fill="#3b404b"/>
+
+  <rect x="370" y="142" width="358" height="228" fill="#282c34"/>
+  <path d="M370 142h358v96l-358 42z" fill="#2f333d" opacity=".6"/>
+  <path d="M370 356l120-96 120 42 118-66v124H370z" fill="#242830" opacity=".55"/>
+
+  <!-- ventana principal -->
+  <rect x="396" y="166" width="196" height="146" rx="5" fill="#1d2026" stroke="#444955"/>
+  <rect x="396" y="166" width="196" height="18" rx="5" fill="#2c3038"/>
+  <circle cx="406" cy="175" r="2" fill="#648ce9"/>
+  <rect x="414" y="173" width="34" height="4" rx="2" fill="#494e5b"/>
+  <rect x="408" y="196" width="58" height="46" rx="2" fill="#2c3038"/>
+  <rect x="476" y="196" width="100" height="7" rx="2" fill="#494e5b"/>
+  <rect x="476" y="211" width="82" height="7" rx="2" fill="#3e424d"/>
+  <rect x="476" y="226" width="92" height="7" rx="2" fill="#3e424d"/>
+  <rect x="408" y="256" width="168" height="7" rx="2" fill="#373b45"/>
+  <rect x="408" y="271" width="120" height="7" rx="2" fill="#373b45"/>
+  <rect x="408" y="286" width="64" height="7" rx="2" fill="#648ce9" opacity=".65"/>
+
+  <!-- ventana secundaria -->
+  <rect x="566" y="200" width="140" height="112" rx="5" fill="#1d2026" stroke="#444955"/>
+  <rect x="566" y="200" width="140" height="16" rx="5" fill="#2c3038"/>
+  <rect x="574" y="226" width="54" height="38" rx="2" fill="#272b33"/>
+  <rect x="636" y="226" width="60" height="6" rx="2" fill="#494e5b"/>
+  <rect x="636" y="239" width="46" height="6" rx="2" fill="#3e424d"/>
+  <rect x="574" y="276" width="124" height="6" rx="2" fill="#373b45"/>
+  <rect x="574" y="289" width="82" height="6" rx="2" fill="#85cdc3" opacity=".55"/>
+
+  <!-- dock -->
+  <rect x="452" y="338" width="196" height="24" rx="7" fill="#17191e" stroke="#3c414c"/>
+  <rect x="464" y="345" width="10" height="10" rx="2" fill="#648ce9"/>
+  <rect x="482" y="345" width="10" height="10" rx="2" fill="#4d525e"/>
+  <rect x="500" y="345" width="10" height="10" rx="2" fill="#4d525e"/>
+  <rect x="518" y="345" width="10" height="10" rx="2" fill="#85cdc3" opacity=".75"/>
+  <rect x="536" y="345" width="10" height="10" rx="2" fill="#4d525e"/>
+  <rect x="554" y="345" width="10" height="10" rx="2" fill="#4d525e"/>
+
+  <!-- soporte del televisor -->
+  <path d="M520 382v88M470 470h100" stroke="#606673" stroke-width="1.6" stroke-linecap="round"/>
+
+  <!-- portátil -->
+  <rect x="106" y="336" width="190" height="118" rx="6" fill="#181a1f" stroke="#606673" stroke-width="1.6"/>
+  <rect x="114" y="344" width="174" height="102" rx="3" fill="url(#h-lap)" stroke="#3e434e"/>
+  <rect x="122" y="352" width="56" height="86" rx="2" fill="#2a2d35"/>
+  <rect x="188" y="352" width="88" height="6" rx="2" fill="#494e5b"/>
+  <rect x="188" y="366" width="70" height="6" rx="2" fill="#3e424d"/>
+  <rect x="188" y="380" width="80" height="6" rx="2" fill="#3e424d"/>
+  <rect x="188" y="394" width="46" height="6" rx="2" fill="#648ce9" opacity=".65"/>
+  <rect x="122" y="446" width="154" height="1.2" fill="#444955"/>
+  <path d="M88 454h226l16 20H72z" fill="#22252b" stroke="#606673" stroke-width="1.6" stroke-linejoin="round"/>
+  <path d="M120 462h160" stroke="#444955" stroke-width="1.2" stroke-linecap="round"/>
+
+  <!-- enlace -->
+  <path d="M300 362c26-44 12-82 24-118" stroke="#648ce9" stroke-width="1.6" stroke-dasharray="3 8" stroke-linecap="round" opacity=".85"/>
+  <circle cx="310" cy="288" r="19" fill="#15171b" stroke="#648ce9" stroke-width="1.3"/>
+  <rect x="302" y="281" width="16" height="10" rx="1.5" fill="none" stroke="#648ce9" stroke-width="1.2"/>
+  <path d="M310 314l-8-12h16z" fill="#648ce9"/>
+
+  <!-- planta -->
+  <path d="M812 474h44l-6 34h-32z" fill="#18322e" stroke="#35635d"/>
+  <path d="M834 474c-2-26-10-38-24-46M834 474c2-30 12-44 26-52M834 466c-14-8-20-18-22-28M834 466c12-10 18-20 20-32" stroke="#5eb8ac" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+  <ellipse cx="808" cy="428" rx="7" ry="12" fill="#3d9388" opacity=".8" transform="rotate(-28 808 428)"/>
+  <ellipse cx="862" cy="418" rx="7" ry="13" fill="#3d9388" opacity=".8" transform="rotate(24 862 418)"/>
+  <ellipse cx="812" cy="452" rx="6" ry="10" fill="#328177" opacity=".7" transform="rotate(-52 812 452)"/>
+
+  <!-- detalles -->
+  <circle cx="232" cy="114" r="2.6" fill="#85cdc3" opacity=".55"/>
+  <circle cx="266" cy="92" r="2" fill="#648ce9" opacity=".55"/>
+  <circle cx="790" cy="190" r="2.2" fill="#85cdc3" opacity=".4"/>
+  <circle cx="760" cy="326" r="1.8" fill="#648ce9" opacity=".4"/>
+</svg>
