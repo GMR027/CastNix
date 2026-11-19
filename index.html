@@ -3,1145 +3,685 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CastNix — Comparte tu pantalla Linux con la TV</title>
-<meta name="description" content="CastNix espeja tu escritorio Linux a cualquier televisor con AirPlay 2 o Google Cast, con un botón en el menú rápido de GNOME. Instalación en un solo comando.">
-<meta name="theme-color" content="#070a14">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop stop-color='%235b8cff'/><stop offset='.55' stop-color='%23a78bfa'/><stop offset='1' stop-color='%232dd4bf'/></linearGradient></defs><rect width='100' height='100' rx='24' fill='%23070a14'/><rect x='22' y='28' width='56' height='36' rx='4' fill='none' stroke='url(%23g)' stroke-width='4'/><path d='M42 78h16M50 64v14' stroke='url(%23g)' stroke-width='4' stroke-linecap='round'/></svg>">
+<title>CastNix — Tu Linux en la TV</title>
+<meta name="description" content="CastNix envía la pantalla de tu Linux a cualquier televisor con AirPlay 2 o Google Cast, desde un botón en el menú de GNOME. Se instala con un solo comando.">
+<meta name="theme-color" content="#0e1317">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop stop-color='%237fd3fa'/><stop offset='.55' stop-color='%2315a6f0'/><stop offset='1' stop-color='%230e86c9'/></linearGradient></defs><rect width='100' height='100' rx='26' fill='%230e1317'/><rect x='20' y='26' width='60' height='38' rx='6' fill='none' stroke='url(%23g)' stroke-width='6'/><path d='M38 78h24M50 64v14' stroke='url(%23g)' stroke-width='6' stroke-linecap='round'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
   :root{
-    --bg:#111214;
-    --bg-2:#15171a;
-    --surface:#181a1e;
-    --surface-2:#1e2126;
-    --code:#141619;
-    --line:rgba(238,232,222,.09);
-    --line-2:rgba(238,232,222,.18);
-    --txt:#eae5db;
-    --muted:#a8a299;
-    --dim:#7a756d;
-    --brass:#c2a578;
-    --brass-2:#d9c4a2;
-    --brass-ink:#1a1611;
-    --sage:#8fa494;
-    --clay:#bd8a70;
-    --radius:14px;
-    --mono:ui-monospace,SFMono-Regular,"SF Mono","Cascadia Code","JetBrains Mono",Menlo,Consolas,monospace;
-    --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Noto Serif",Georgia,"Times New Roman",serif;
-    --max:1140px;
+    --bg:#0e1317;
+    --bg-2:#151b20;
+    --panel:rgba(255,255,255,.035);
+    --panel-2:rgba(255,255,255,.06);
+    --line:rgba(255,255,255,.08);
+    --line-2:rgba(255,255,255,.16);
+    --txt:#eef3f7;
+    --muted:#9fb0bd;
+    --dim:#6b7c89;
+    --cyan:#5cc4f7;
+    --violet:#15a6f0;
+    --pink:#0e86c9;
+    --lime:#46c38a;
+    --amber:#f0b429;
+    --grad:linear-gradient(110deg,#7fd3fa 0%,#15a6f0 55%,#0e86c9 100%);
+    --term:#0b1014;
+    --r:20px;
+    --display:"Bricolage Grotesque",system-ui,sans-serif;
+    --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --max:1180px;
   }
-  *{box-sizing:border-box}
+  *,*::before,*::after{box-sizing:border-box}
   html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
   body{
-    margin:0;
-    font-family:var(--sans);
-    color:var(--txt);
-    background:var(--bg);
-    line-height:1.66;
-    font-size:16px;
-    -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
+    margin:0;background:var(--bg);color:var(--txt);
+    font:16px/1.65 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden;
   }
-  body::before{
-    content:"";
-    position:fixed;inset:0;z-index:-1;
-    background:
-      radial-gradient(800px 500px at 80% -4%, rgba(194,165,120,.07), transparent 65%),
-      radial-gradient(700px 600px at 0% 60%, rgba(143,164,148,.045), transparent 65%),
-      linear-gradient(180deg,#131417 0%,#111214 40%,#0f1012 100%);
-  }
-  a{color:var(--brass);text-decoration:none}
-  a:hover{text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(194,165,120,.5)}
-  ::selection{background:rgba(194,165,120,.28)}
-  .grid > *, .hero-grid > *, .steps > *, .split > *{min-width:0}
+  a{color:inherit}
+  img,svg{display:block;max-width:100%}
+  code,kbd{font-family:var(--mono);font-size:.88em}
+  :not(pre)>code{background:var(--panel-2);border:1px solid var(--line);padding:.1em .45em;border-radius:6px;color:#d7efff}
+  kbd{display:inline-block;padding:.08em .5em;border-radius:7px;border:1px solid var(--line-2);border-bottom-width:3px;background:#1c242b;font-size:.82em;color:#fff}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 16px}
+  @media(min-width:700px){.wrap{padding:0 28px}}
+  .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  ::selection{background:var(--violet);color:#fff}
 
-  .wrap{width:100%;max-width:var(--max);margin:0 auto;padding:0 28px}
-  h1,h2,h3,h4{font-family:var(--serif);font-weight:500;letter-spacing:-.012em;color:var(--txt)}
+  /* ---------- fondo animado ---------- */
+  .aurora{position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden}
+  .aurora i{position:absolute;border-radius:50%;filter:blur(90px);opacity:.38;animation:float 22s ease-in-out infinite alternate}
+  .aurora i:nth-child(1){width:620px;height:620px;background:#0e6fa8;top:-220px;left:-160px}
+  .aurora i:nth-child(2){width:520px;height:520px;background:#15a6f0;top:10%;right:-200px;animation-delay:-6s}
+  .aurora i:nth-child(3){width:460px;height:460px;background:#0a4f7a;bottom:-200px;left:30%;opacity:.22;animation-delay:-12s}
+  @keyframes float{to{transform:translate(80px,60px) scale(1.15)}}
+  .grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.5;
+    background-image:radial-gradient(rgba(255,255,255,.06) 1px,transparent 1px);background-size:3px 3px;mask-image:linear-gradient(#000,transparent 80%)}
 
-  .i{width:18px;height:18px;flex:0 0 auto;stroke:currentColor;fill:none;
-     stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px}
-
-  /* ---------- navegación ---------- */
-  .nav{
-    position:sticky;top:0;z-index:50;
-    backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-    background:rgba(17,18,20,.82);
-    border-bottom:1px solid var(--line);
-  }
-  .nav-in{display:flex;align-items:center;gap:24px;height:66px}
-  .brand{display:flex;align-items:center;gap:11px;font-family:var(--serif);font-size:1.16rem;color:var(--txt);letter-spacing:0}
-  .brand:hover{text-decoration:none;color:var(--brass-2)}
-  .logo{
-    width:31px;height:31px;border-radius:9px;display:grid;place-items:center;
-    border:1px solid rgba(194,165,120,.38);color:var(--brass);
-    background:rgba(194,165,120,.06);
-  }
-  .logo .i{width:16px;height:16px}
-  .brand small{
-    font-family:var(--sans);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--dim);margin-left:1px;
-  }
-  .nav-links{display:flex;gap:2px;margin-left:auto;align-items:center;flex-wrap:wrap}
-  .nav-links a{color:var(--muted);font-size:.855rem;padding:7px 10px;border-radius:7px}
-  .nav-links a:hover{color:var(--txt);background:rgba(255,255,255,.04);text-decoration:none}
-  .nav .btn{margin-left:10px}
+  /* ---------- nav ---------- */
+  .nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);
+    background:rgba(14,19,23,.72);border-bottom:1px solid var(--line)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--display);font-weight:800;font-size:1.25rem;letter-spacing:-.02em}
+  .logo{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#15a6f0;box-shadow:0 0 24px rgba(21,166,240,.55)}
+  .logo svg{width:20px;height:20px;stroke:#fff;stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .nav-links{display:flex;align-items:center;gap:4px}
+  .nav-links a{text-decoration:none;color:var(--muted);font-size:.92rem;font-weight:500;padding:8px 12px;border-radius:10px;transition:.2s}
+  .nav-links a:hover{color:#fff;background:var(--panel-2)}
+  .nav-links .cta{color:#0e1317;background:#fff;font-weight:700}
+  .nav-links .cta:hover{color:#0e1317;background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.15)}
+  @media(max-width:820px){.nav-links a:not(.cta){display:none}}
 
   /* ---------- botones ---------- */
-  .btn{
-    display:inline-flex;align-items:center;gap:9px;
-    padding:11px 19px;border-radius:8px;font-weight:600;font-size:.875rem;
-    border:1px solid transparent;cursor:pointer;transition:.18s ease;white-space:nowrap;
-  }
-  .btn:hover{text-decoration:none}
-  .btn-primary{background:var(--brass);color:var(--brass-ink);border-color:var(--brass)}
-  .btn-primary:hover{background:var(--brass-2);border-color:var(--brass-2)}
-  .btn-ghost{background:transparent;border-color:var(--line-2);color:var(--txt)}
-  .btn-ghost:hover{background:rgba(255,255,255,.045);border-color:rgba(238,232,222,.3)}
-  .btn-sm{padding:8px 13px;font-size:.8rem;border-radius:7px}
+  .btn{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-weight:700;font-size:1rem;
+    padding:15px 26px;border-radius:14px;border:0;cursor:pointer;transition:transform .2s,box-shadow .2s,background .2s;font-family:var(--sans)}
+  .btn svg{width:18px;height:18px;stroke:currentColor;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .btn-main{color:#fff;background:#15a6f0;box-shadow:0 10px 36px -10px rgba(21,166,240,.75)}
+  .btn-main:hover{background:#2bb2f5;transform:translateY(-2px);box-shadow:0 16px 46px -10px rgba(21,166,240,.9)}
+  .btn-ghost{color:#fff;background:var(--panel-2);border:1px solid var(--line-2)}
+  .btn-ghost:hover{background:rgba(255,255,255,.1);transform:translateY(-2px)}
+  @keyframes shift{to{background-position:200% 0}}
 
   /* ---------- hero ---------- */
-  .hero{position:relative;padding:80px 0 76px;overflow:hidden}
-  .hero::before{
-    content:"";position:absolute;inset:-120px -10% auto auto;width:820px;height:620px;pointer-events:none;
-    background:radial-gradient(closest-side, rgba(194,165,120,.11), rgba(194,165,120,.03) 55%, transparent 75%);
-  }
-  .hero-grid{display:grid;grid-template-columns:1.07fr .93fr;gap:52px;align-items:center;position:relative}
-  @media (max-width:940px){.hero-grid{grid-template-columns:1fr;gap:44px}}
+  .hero{padding:72px 0 40px;position:relative}
+  .hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center}
+  @media(max-width:960px){.hero-grid{grid-template-columns:1fr;gap:36px}}
+  .pill{display:inline-flex;align-items:center;gap:10px;padding:6px 14px 6px 6px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line-2);font-size:.85rem;color:var(--muted)}
+  .pill b{color:#0e1317;background:var(--lime);padding:2px 10px;border-radius:999px;font-size:.76rem;letter-spacing:.04em}
+  h1{font-family:var(--display);font-weight:800;font-size:clamp(2.7rem,7vw,5.4rem);line-height:.98;letter-spacing:-.045em;margin:22px 0 20px}
+  .lead{font-size:clamp(1.05rem,1.6vw,1.22rem);color:var(--muted);max-width:560px;margin:0 0 32px}
+  .lead strong{color:#fff;font-weight:600}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:34px}
+  .hero-facts{display:flex;flex-wrap:wrap;gap:22px;color:var(--muted);font-size:.9rem}
+  .hero-facts span{display:flex;align-items:center;gap:8px}
+  .hero-facts svg{width:18px;height:18px;stroke:var(--lime);stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
 
-  .badge{
-    display:inline-flex;align-items:center;gap:9px;
-    font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;
-    color:#c9c2b5;border:1px solid var(--line-2);background:rgba(255,255,255,.018);
-    padding:7px 13px;border-radius:999px;
-  }
-  .dot{width:6px;height:6px;border-radius:50%;background:var(--sage)}
+  /* escena laptop -> TV */
+  .scene{position:relative;aspect-ratio:1/0.82;width:100%;max-width:580px;justify-self:center}
+  .tv{position:absolute;top:0;right:0;width:84%;}
+  .tv-frame{border-radius:14px;padding:10px;background:linear-gradient(160deg,#2b343c,#151b20);border:1px solid var(--line-2);
+    box-shadow:0 40px 80px -20px rgba(0,0,0,.8),0 0 120px -10px rgba(21,166,240,.45)}
+  .screen{aspect-ratio:16/9;border-radius:7px;overflow:hidden;position:relative;background:#0f151a}
+  .tv-stand{width:30%;height:14px;margin:0 auto;background:linear-gradient(#232c33,#151b20);border-radius:0 0 10px 10px}
+  .desk{position:absolute;inset:0;background:
+      radial-gradient(circle at 25% 30%,rgba(92,196,247,.9),transparent 45%),
+      radial-gradient(circle at 75% 35%,rgba(21,166,240,.95),transparent 50%),
+      radial-gradient(circle at 55% 90%,rgba(14,134,201,.9),transparent 50%),#13202b;
+    background-size:160% 160%;animation:mesh 10s ease-in-out infinite alternate}
+  @keyframes mesh{to{background-position:100% 100%}}
+  .desk .bar{position:absolute;top:0;left:0;right:0;height:7%;background:rgba(0,0,0,.45);display:flex;justify-content:center;align-items:center}
+  .desk .bar::after{content:"";width:16%;height:30%;border-radius:4px;background:rgba(255,255,255,.55)}
+  .desk .win{position:absolute;border-radius:5px;background:rgba(10,10,25,.62);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(4px)}
+  .desk .w1{left:9%;top:18%;width:48%;height:52%}
+  .desk .w2{left:48%;top:36%;width:42%;height:46%;animation:bob 6s ease-in-out infinite}
+  .desk .w1::before,.desk .w2::before{content:"";position:absolute;left:8%;right:30%;top:16%;height:7%;border-radius:3px;background:rgba(255,255,255,.4);box-shadow:0 12px 0 rgba(255,255,255,.18),0 24px 0 rgba(255,255,255,.18)}
+  .desk .dock{position:absolute;bottom:5%;left:30%;right:30%;height:8%;border-radius:6px;background:rgba(0,0,0,.4);display:flex;justify-content:space-evenly;align-items:center}
+  .desk .dock i{width:9%;aspect-ratio:1;border-radius:3px;background:rgba(255,255,255,.7)}
+  @keyframes bob{50%{transform:translateY(-6%)}}
+  .live{position:absolute;top:9%;right:4%;font:700 9px/1 var(--mono);letter-spacing:.1em;color:#fff;background:#ef4444;padding:4px 7px;border-radius:5px;display:flex;align-items:center;gap:5px}
+  .live::before{content:"";width:5px;height:5px;border-radius:50%;background:#fff;animation:blink 1.2s infinite}
+  @keyframes blink{50%{opacity:.2}}
+  .laptop{position:absolute;left:0;bottom:4%;width:52%;z-index:2;filter:drop-shadow(0 30px 40px rgba(0,0,0,.7))}
+  .lid{border-radius:10px 10px 0 0;padding:7px 7px 9px;background:linear-gradient(160deg,#2f3941,#182027);border:1px solid var(--line-2);border-bottom:0}
+  .base{height:12px;margin:0 -9%;border-radius:0 0 12px 12px;background:linear-gradient(#38434c,#1c242b);position:relative}
+  .base::after{content:"";position:absolute;left:42%;right:42%;top:0;height:4px;border-radius:0 0 5px 5px;background:#11171c}
+  .beam{position:absolute;left:30%;top:28%;width:52%;height:46%;z-index:1;pointer-events:none}
+  .beam span{position:absolute;left:0;bottom:0;width:100%;aspect-ratio:1;border-radius:50%;border:2px solid transparent;
+    border-top-color:var(--cyan);border-right-color:var(--violet);transform:rotate(0deg) scale(.2);transform-origin:0 100%;opacity:0;animation:wave 2.6s cubic-bezier(.2,.6,.3,1) infinite}
+  .beam span:nth-child(2){animation-delay:.85s}
+  .beam span:nth-child(3){animation-delay:1.7s}
+  @keyframes wave{0%{opacity:0;transform:scale(.15)}20%{opacity:1}100%{opacity:0;transform:scale(1)}}
+  .float-chip{position:absolute;z-index:3;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;
+    background:rgba(24,31,37,.86);border:1px solid var(--line-2);backdrop-filter:blur(10px);font-size:.82rem;font-weight:600;box-shadow:0 20px 40px -10px rgba(0,0,0,.6);animation:bob 5s ease-in-out infinite}
+  .float-chip small{display:block;color:var(--muted);font-weight:500;font-size:.72rem}
+  .float-chip .ic{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--grad)}
+  .float-chip .ic svg{width:16px;height:16px;stroke:#0e1317;stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .fc1{left:-2%;top:12%}
+  .fc2{right:-3%;bottom:-2%;animation-delay:-2.5s}
+  @media(max-width:520px){.float-chip{font-size:.72rem;padding:8px 10px}.fc1{left:0;top:2%}.fc2{right:0}}
 
-  h1{
-    font-size:clamp(2.5rem,4.7vw,3.7rem);
-    line-height:1.06;letter-spacing:-.02em;margin:24px 0 20px;
-  }
-  h1 em{font-style:italic;color:var(--brass-2)}
-  .lead{font-size:1.055rem;color:var(--muted);max-width:560px;margin:0 0 30px}
-  .lead strong{color:var(--txt);font-weight:600}
-  .lead .hl{color:var(--brass-2)}
-
-  .install-box{
-    background:var(--code);border:1px solid var(--line);border-radius:12px;
-    overflow:hidden;max-width:580px;
-    box-shadow:0 28px 60px -40px #000;
-  }
-  .ib-head{
-    display:flex;align-items:center;gap:8px;
-    padding:9px 15px;border-bottom:1px solid var(--line);
-    background:rgba(255,255,255,.018);
-  }
-  .tl{display:flex;gap:6px}
-  .tl i{width:8px;height:8px;border-radius:50%;display:block;background:#34373d}
-  .tl i:nth-child(1){background:#6b5f4d}
-  .tl i:nth-child(2){background:#4a4d45}
-  .tl i:nth-child(3){background:#3a3d42}
-  .ib-head span{
-    font-family:var(--mono);font-size:.7rem;letter-spacing:.04em;color:var(--dim);margin-left:6px;
-  }
-  .ib-head .copy{margin-left:auto}
-  pre{
-    margin:0;padding:16px 18px;overflow-x:auto;max-width:100%;
-    font-family:var(--mono);font-size:.845rem;line-height:1.8;color:#d7d1c5;
-    scrollbar-width:thin;scrollbar-color:rgba(238,232,222,.18) transparent;
-  }
-  pre::-webkit-scrollbar{height:8px}
-  pre::-webkit-scrollbar-track{background:transparent}
-  pre::-webkit-scrollbar-thumb{background:rgba(238,232,222,.16);border-radius:8px}
-  pre .c{color:#736d63}
-  pre .k{color:var(--brass-2)}
-  pre .s{color:#a3b8a8}
-  pre .p{color:#d8c9ae}
-  code{
-    font-family:var(--mono);font-size:.87em;background:rgba(238,232,222,.06);
-    padding:.1em .32em;border-radius:4px;color:#dcd5c8;
-  }
-  pre code{background:none;padding:0;font-size:inherit;color:inherit}
-  .copy{
-    background:transparent;border:1px solid var(--line);color:var(--dim);
-    font-family:var(--sans);font-size:.7rem;font-weight:600;letter-spacing:.02em;
-    padding:5px 10px;border-radius:6px;cursor:pointer;transition:.15s;
-    display:inline-flex;align-items:center;gap:6px;
-  }
-  .copy:hover{color:var(--txt);border-color:var(--line-2)}
-  .copy.done{color:var(--sage);border-color:rgba(143,164,148,.45)}
-
-  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
-  .chip{
-    font-size:.755rem;color:var(--muted);background:transparent;
-    border:1px solid var(--line);padding:5px 11px;border-radius:999px;
-    display:inline-flex;align-items:center;gap:7px;
-  }
-  .chip b{color:var(--txt);font-weight:600}
-  .chip .i{width:12px;height:12px;color:var(--sage)}
-
-  .hero-figure{margin:0;position:relative}
-  .hero-figure img{display:block;width:100%;height:auto;filter:drop-shadow(0 30px 50px rgba(0,0,0,.45))}
-  .hero-figure figcaption{
-    margin-top:14px;font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;
-    text-transform:uppercase;color:var(--dim);text-align:right;
-  }
+  /* ---------- marquesina ---------- */
+  .marquee{margin:56px 0 0;padding:22px 0;border-block:1px solid var(--line);overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+  .marquee-track{display:flex;gap:56px;width:max-content;animation:scroll 34s linear infinite}
+  .marquee span{font-family:var(--display);font-weight:700;font-size:1.5rem;color:rgba(255,255,255,.38);white-space:nowrap;letter-spacing:-.02em}
+  .marquee span.hi{color:#fff}
+  @keyframes scroll{to{transform:translateX(-50%)}}
+  .marquee-label{text-align:center;color:var(--dim);font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;margin:0 0 16px}
 
   /* ---------- secciones ---------- */
-  section{padding:88px 0;position:relative}
-  section + section{border-top:1px solid var(--line)}
-  .eyebrow{
-    display:flex;align-items:center;gap:12px;
-    font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;
-    color:var(--brass);margin:0 0 16px;
-  }
-  .eyebrow::before{content:"";width:26px;height:1px;background:var(--brass);opacity:.55}
-  h2{font-size:clamp(1.85rem,3.4vw,2.6rem);line-height:1.16;margin:0 0 14px}
-  .sec-lead{color:var(--muted);max-width:720px;margin:0 0 38px;font-size:1.005rem}
-  h3{font-size:1.14rem;margin:0 0 8px}
-  h4{font-size:1rem;margin:0 0 6px}
+  section{padding:110px 0 0}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font:600 .8rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin:0 0 16px}
+  .eyebrow::before{content:"";width:22px;height:2px;background:var(--grad);border-radius:2px}
+  h2{font-family:var(--display);font-weight:800;font-size:clamp(2rem,4.6vw,3.4rem);line-height:1.04;letter-spacing:-.035em;margin:0 0 16px}
+  .sec-lead{color:var(--muted);font-size:1.1rem;max-width:640px;margin:0 0 48px}
+  .center{text-align:center}
+  .center .sec-lead{margin-inline:auto}
 
-  .grid{display:grid;gap:18px}
-  .g3{grid-template-columns:repeat(3,1fr)}
-  .g2{grid-template-columns:repeat(2,1fr)}
-  .split{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px;align-items:start}
-  @media (max-width:900px){.split{grid-template-columns:1fr;gap:34px}}
-  @media (max-width:840px){.g3,.g2{grid-template-columns:1fr}}
+  /* ---------- instalación ---------- */
+  .install{position:relative;border-radius:32px;padding:clamp(22px,4vw,56px);background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.015));border:1px solid var(--line-2);overflow:hidden}
+  .install::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:var(--grad);opacity:.5;
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+  .install::after{content:"";position:absolute;width:500px;height:500px;right:-200px;top:-260px;background:radial-gradient(circle,rgba(21,166,240,.35),transparent 65%);pointer-events:none}
 
-  .card{
-    background:var(--surface);border:1px solid var(--line);
-    border-radius:var(--radius);padding:26px;transition:border-color .2s,background .2s;
-  }
-  .card:hover{border-color:var(--line-2);background:#191b1f}
-  .card p{color:var(--muted);font-size:.92rem;margin:6px 0 0}
-  .mini{font-size:.76rem;color:var(--dim);margin-top:12px;display:block}
+  .distro-q{font-weight:600;margin:0 0 14px;font-size:1.02rem}
+  .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:36px}
+  .tab{appearance:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:11px 18px 11px 12px;border-radius:14px;
+    background:var(--panel);border:1px solid var(--line-2);color:var(--muted);font:600 .95rem var(--sans);transition:.2s}
+  .tab:hover{color:#fff;border-color:rgba(255,255,255,.3)}
+  .tab[aria-selected="true"]{color:#0e1317;background:#fff;border-color:#fff;box-shadow:0 8px 30px -8px rgba(255,255,255,.35)}
+  .tab .dl{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font:800 .75rem var(--display);color:#fff}
+  .dl-fedora{background:#3c6eb4}.dl-ubuntu{background:#e95420}.dl-arch{background:#1793d1}.dl-other{background:#4b5c69}
 
-  .card-flush{padding:0;overflow:hidden}
-  .card-figure{border-bottom:1px solid var(--line);background:#121417}
-  .card-figure img{display:block;width:100%;height:auto}
-  .card-body{padding:24px 26px 26px}
+  .steps{display:grid;gap:18px;counter-reset:s}
+  .step{display:grid;grid-template-columns:56px minmax(0,1fr);gap:20px;align-items:start;position:relative}
+  .step>div{min-width:0}
+  @media(max-width:600px){
+    .step{grid-template-columns:40px minmax(0,1fr);gap:14px}
+    .num{width:40px!important;height:40px!important;border-radius:13px!important;font-size:1.15rem!important}
+    .step:not(:last-child)::after{left:19px!important;top:46px!important}
+    .step h3{margin-top:4px;font-size:1.25rem}
+    .term pre{font-size:.82rem;padding:14px}
+  }
+  .step:not(:last-child)::after{content:"";position:absolute;left:27px;top:62px;bottom:-14px;width:2px;background:linear-gradient(var(--line-2),transparent)}
+  .num{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;font:800 1.5rem var(--display);
+    background:var(--bg-2);border:1px solid var(--line-2);position:relative}
+  .num::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1.5px;background:var(--grad);
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+  .step h3{font-family:var(--display);font-size:1.45rem;letter-spacing:-.02em;margin:10px 0 6px;line-height:1.2}
+  .step p{color:var(--muted);margin:0 0 14px}
+  .step p strong{color:#fff}
 
-  .step{
-    position:relative;padding:24px;border-radius:var(--radius);
-    border:1px solid var(--line);background:var(--surface);
-  }
-  .step .n{
-    font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;color:var(--brass);
-    display:block;margin-bottom:12px;
-  }
-  .step p{margin:0;color:var(--muted);font-size:.9rem}
+  .term{border-radius:16px;background:var(--term);border:1px solid var(--line-2);overflow:hidden;box-shadow:0 30px 60px -20px rgba(0,0,0,.8)}
+  .term-head{display:flex;align-items:center;gap:12px;padding:10px 10px 10px 16px;background:rgba(255,255,255,.035);border-bottom:1px solid var(--line)}
+  .dots{display:flex;gap:7px}
+  .dots i{width:11px;height:11px;border-radius:50%;background:#ff5f57}.dots i:nth-child(2){background:#febc2e}.dots i:nth-child(3){background:#28c840}
+  .term-head span{flex:1;font:.8rem var(--mono);color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .copy{appearance:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:10px;border:0;
+    background:#fff;color:#0e1317;font:700 .86rem var(--sans);transition:.2s;white-space:nowrap}
+  .copy svg{width:15px;height:15px;stroke:currentColor;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .copy:hover{transform:scale(1.04)}
+  .copy.done{background:var(--lime)}
+  .term pre{margin:0;padding:18px 20px 20px;overflow-x:auto;font:.95rem/1.75 var(--mono);color:#e9e7ff}
+  .term .c{color:var(--dim)}
+  .term .p{color:var(--cyan)}
+  .term .ps{color:var(--lime);user-select:none}
+  .term .ok{color:var(--lime)}
+  .term .w{color:var(--amber)}
+  .term .h{color:var(--pink);font-weight:600}
+  .term .k{color:#8fd6fb}
+  .panel[hidden]{display:none}
+  .note{display:flex;gap:12px;align-items:flex-start;margin-top:14px;padding:14px 16px;border-radius:14px;background:rgba(92,196,247,.06);border:1px solid rgba(92,196,247,.2);color:var(--muted);font-size:.94rem}
+  .note svg{flex:none;width:20px;height:20px;margin-top:2px;stroke:var(--cyan);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .note strong{color:#fff}
+  .note.warn{background:rgba(240,180,41,.06);border-color:rgba(240,180,41,.22)}
+  .note.warn svg{stroke:var(--amber)}
 
-  .figure{
-    border:1px solid var(--line);border-radius:var(--radius);
-    background:#121417;overflow:hidden;
-  }
-  .figure img{display:block;width:100%;height:auto}
-  .figure figcaption{
-    border-top:1px solid var(--line);padding:12px 18px;
-    font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;color:var(--dim);
-  }
+  .pin-demo{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:4px}
+  .pin{display:flex;gap:8px}
+  .pin b{width:46px;height:58px;border-radius:12px;display:grid;place-items:center;font:800 1.7rem var(--display);background:var(--bg-2);border:1px solid var(--line-2)}
+  .pin b:nth-child(1){color:var(--cyan)}.pin b:nth-child(2){color:#3fb5f2}.pin b:nth-child(3){color:var(--violet)}.pin b:nth-child(4){color:var(--pink)}
+  .pin-demo small{color:var(--muted);max-width:280px;font-size:.88rem}
 
-  ul.ticks{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:8px}
-  ul.ticks li{position:relative;padding-left:22px;color:var(--muted);font-size:.905rem}
-  ul.ticks li::before{
-    content:"";position:absolute;left:2px;top:.62em;
-    width:7px;height:7px;border-radius:50%;background:var(--sage);opacity:.75;
-  }
-  ul.ticks.cross li::before{background:var(--clay);opacity:.7}
+  .done-row{display:flex;align-items:center;gap:14px;margin-top:30px;padding:18px 22px;border-radius:18px;background:rgba(70,195,138,.07);border:1px solid rgba(70,195,138,.25)}
+  .done-row svg{flex:none;width:28px;height:28px;stroke:var(--lime);stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .done-row p{margin:0;color:var(--muted)}
+  .done-row strong{color:#fff}
 
-  .tag{
-    display:inline-block;font-size:.66rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
-    padding:4px 9px;border-radius:4px;margin-bottom:12px;
-    color:var(--brass);border:1px solid rgba(194,165,120,.32);background:rgba(194,165,120,.05);
-  }
-  .tag.green{color:var(--sage);border-color:rgba(143,164,148,.32);background:rgba(143,164,148,.05)}
-  .tag.amber{color:#c5b193;border-color:var(--line-2);background:transparent}
+  /* checklist previo */
+  .pre{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+  @media(max-width:820px){.pre{grid-template-columns:1fr}}
+  .pre div{display:flex;gap:14px;align-items:center;padding:16px 18px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
+  .pre .ic{flex:none;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--panel-2);border:1px solid var(--line-2)}
+  .pre .ic svg{width:21px;height:21px;stroke:#fff;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .pre b{display:block;font-size:.97rem}
+  .pre span{color:var(--muted);font-size:.86rem;line-height:1.4;display:block}
 
-  .callout{
-    display:flex;gap:15px;align-items:flex-start;
-    border-radius:12px;padding:18px 20px;margin-top:24px;
-    border:1px solid rgba(189,138,112,.24);background:rgba(189,138,112,.055);
-  }
-  .callout .i{width:18px;height:18px;color:var(--clay);margin-top:3px}
-  .callout p{margin:0;font-size:.91rem;color:#d3c7bb}
-  .callout strong{color:#e8d9c9;font-weight:600}
-  .callout.info{border-color:rgba(143,164,148,.24);background:rgba(143,164,148,.05)}
-  .callout.info .i{color:var(--sage)}
-  .callout.info p{color:#c3c9bf}
-  .callout.info strong{color:#dbe1d6}
+  /* ---------- demo instalador ---------- */
+  .demo-wrap{display:grid;grid-template-columns:1fr 1.15fr;gap:40px;align-items:center}
+  @media(max-width:900px){.demo-wrap{grid-template-columns:1fr}}
+  .demo-list{list-style:none;padding:0;margin:0;display:grid;gap:14px}
+  .demo-list li{display:flex;gap:14px;align-items:flex-start}
+  .demo-list li i{flex:none;width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--panel-2);border:1px solid var(--line-2);font:700 .78rem var(--mono);font-style:normal;color:var(--cyan)}
+  .demo-list b{display:block}
+  .demo-list span{color:var(--muted);font-size:.93rem}
+  #demo pre{min-height:360px}
+  #demo .ln{opacity:1}
+  .js #demo .ln{opacity:0;transform:translateY(4px);transition:opacity .35s,transform .35s}
+  .js #demo .ln.on{opacity:1;transform:none}
+  .cursor{display:inline-block;width:.6em;height:1.1em;background:var(--cyan);vertical-align:-.2em;animation:blink 1s steps(1) infinite}
 
-  /* ---------- tablas ---------- */
-  .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:#16181b}
-  table{width:100%;border-collapse:collapse;font-size:.875rem;min-width:580px}
-  th,td{text-align:left;padding:12px 18px;border-bottom:1px solid rgba(238,232,222,.06);vertical-align:top}
-  th{font-size:.67rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);font-weight:600;background:rgba(255,255,255,.015)}
-  tr:last-child td{border-bottom:none}
-  td:first-child{white-space:nowrap}
-  td code{background:rgba(238,232,222,.055)}
+  /* ---------- AirPlay en la TV ---------- */
+  .tvset{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  @media(max-width:980px){.tvset{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.tvset{grid-template-columns:1fr}}
+  .tvcard{padding:24px;border-radius:var(--r);background:var(--panel);border:1px solid var(--line);transition:.25s;position:relative;overflow:hidden}
+  .tvcard:hover{transform:translateY(-4px);border-color:var(--line-2);background:var(--panel-2)}
+  .tvcard .brandname{font-family:var(--display);font-weight:800;font-size:1.35rem;letter-spacing:-.02em;margin:0 0 4px}
+  .tvcard .proto{display:inline-block;font:600 .72rem var(--mono);letter-spacing:.06em;padding:3px 9px;border-radius:999px;margin-bottom:16px}
+  .proto.ap{background:rgba(92,196,247,.12);color:var(--cyan)}
+  .proto.gc{background:rgba(70,195,138,.12);color:var(--lime)}
+  .path{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .path span{font-size:.86rem;padding:5px 10px;border-radius:9px;background:var(--bg-2);border:1px solid var(--line-2)}
+  .path em{font-style:normal;color:var(--dim);font-size:.8rem}
+  .path span:last-child{border-color:rgba(21,166,240,.6);color:#cdeeff}
+  .tvcard p{color:var(--muted);font-size:.9rem;margin:14px 0 0}
 
-  /* ---------- mock menú rápido ---------- */
-  .mock{
-    background:linear-gradient(175deg,#1a1c20,#141619);
-    border:1px solid var(--line-2);border-radius:18px;padding:16px;
-    box-shadow:0 34px 70px -45px #000, inset 0 1px 0 rgba(255,255,255,.04);
-    max-width:420px;
-  }
-  .mock-top{display:flex;align-items:center;gap:8px;padding:2px 6px 12px;color:var(--dim);font-size:.68rem;font-family:var(--mono);letter-spacing:.06em}
-  .mock-top .grow{margin-left:auto}
-  .tiles{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-  .tile{
-    background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.05);
-    border-radius:12px;padding:11px 12px;display:flex;align-items:center;gap:9px;
-    font-size:.79rem;color:#cfc9be;
-  }
-  .tile .ico{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,.05);color:#a9a399}
-  .tile .i{width:15px;height:15px}
-  .tile.on{background:var(--brass);border-color:var(--brass);color:var(--brass-ink)}
-  .tile.on .ico{background:rgba(26,22,17,.14);color:var(--brass-ink)}
-  .mock-menu{margin-top:10px;background:rgba(10,11,13,.5);border:1px solid rgba(255,255,255,.055);border-radius:12px;padding:8px 10px}
-  .mrow{display:flex;align-items:center;gap:11px;padding:9px 6px;font-size:.82rem;color:#d6d0c6}
-  .mrow + .mrow{border-top:1px solid rgba(255,255,255,.05)}
-  .mrow .i{width:17px;height:17px;color:#9a948a}
-  .mrow .sub{color:var(--dim);font-size:.71rem;display:block;line-height:1.35}
-  .switch{
-    width:36px;height:20px;border-radius:999px;background:#3a3d42;position:relative;margin-left:auto;flex:0 0 auto;
-  }
-  .switch::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#9a958c;transition:.2s}
-  .switch.on{background:var(--brass)}
-  .switch.on::after{left:18px;background:#191510}
-  .mock-cap{font-size:.7rem;color:var(--dim);text-align:center;margin:12px 0 0;letter-spacing:.02em}
+  /* ---------- uso ---------- */
+  .use{display:grid;grid-template-columns:430px 1fr;gap:56px;align-items:center}
+  @media(max-width:960px){.use{grid-template-columns:1fr}}
+  .qs{border-radius:28px;padding:18px;background:rgba(30,37,44,.92);border:1px solid var(--line-2);box-shadow:0 40px 90px -30px rgba(21,166,240,.5);max-width:430px;width:100%;margin:0 auto}
+  .qs-top{display:flex;justify-content:space-between;align-items:center;padding:2px 6px 14px;color:var(--muted);font-size:.82rem}
+  .qs-tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .qt{display:flex;align-items:center;gap:10px;padding:13px 14px;border-radius:999px;background:rgba(255,255,255,.08);font-size:.9rem;font-weight:600}
+  .qt svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;flex:none}
+  .qt.on{background:#15a6f0;color:#fff;box-shadow:0 0 30px -4px rgba(21,166,240,.8);animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{50%{box-shadow:0 0 44px 0 rgba(92,196,247,.6)}}
+  .qs-menu{margin-top:12px;padding:8px;border-radius:20px;background:rgba(0,0,0,.28)}
+  .qr{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;font-size:.92rem}
+  .qr+.qr{border-top:1px solid var(--line)}
+  .qr svg{width:20px;height:20px;stroke:#fff;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round;flex:none}
+  .qr small{display:block;color:var(--muted);font-size:.78rem}
+  .sw{margin-left:auto;width:42px;height:24px;border-radius:999px;background:rgba(255,255,255,.18);position:relative;flex:none}
+  .sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.3s}
+  .sw.on{background:var(--violet)}
+  .sw.on::after{left:21px}
+  .use-steps{display:grid;gap:22px}
+  .use-step{display:flex;gap:18px}
+  .use-step .ic{flex:none;width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--panel-2);border:1px solid var(--line-2)}
+  .use-step .ic svg{width:22px;height:22px;stroke:#fff;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .use-step h3{margin:0 0 4px;font-family:var(--display);font-size:1.3rem;letter-spacing:-.02em}
+  .use-step p{margin:0;color:var(--muted)}
 
-  /* ---------- requisitos ---------- */
-  .req{display:grid;gap:26px}
-  .req-group{border-left:1px solid var(--line);padding-left:20px}
-  .req-group h3{
-    display:flex;align-items:center;gap:9px;
-    font-family:var(--sans);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;
-    color:var(--dim);font-weight:600;margin:0 0 10px;
-  }
-  .req-group h3 .i{width:16px;height:16px;color:var(--brass)}
-  .req-group ul.ticks{margin-top:0}
+  /* ---------- bento ---------- */
+  .bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+  .bx{grid-column:span 2;padding:28px;border-radius:24px;background:var(--panel);border:1px solid var(--line);position:relative;overflow:hidden;transition:.3s}
+  .bx:hover{border-color:var(--line-2);transform:translateY(-3px)}
+  .bx.wide{grid-column:span 3}
+  @media(max-width:900px){.bx,.bx.wide{grid-column:span 3}}
+  @media(max-width:600px){.bx,.bx.wide{grid-column:span 6}}
+  .bx .ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;margin-bottom:22px}
+  .bx .ic svg{width:24px;height:24px;stroke:#0e1317;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .bx h3{font-family:var(--display);font-size:1.35rem;letter-spacing:-.02em;margin:0 0 8px}
+  .bx p{color:var(--muted);margin:0;font-size:.95rem}
+  .bx .glow{position:absolute;width:240px;height:240px;border-radius:50%;filter:blur(60px);opacity:.22;right:-80px;top:-80px;pointer-events:none}
+  .c1 .ic,.c1 .glow{background:var(--cyan)}
+  .c2 .ic,.c2 .glow{background:var(--violet)}
+  .c3 .ic,.c3 .glow{background:var(--pink)}
+  .c4 .ic,.c4 .glow{background:var(--lime)}
+  .c5 .ic,.c5 .glow{background:var(--amber)}
+  .proto-pair{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .proto-pair span{padding:7px 13px;border-radius:10px;background:var(--bg-2);border:1px solid var(--line-2);font-size:.85rem;font-weight:600}
 
-  /* ---------- faq ---------- */
-  .faq{border-top:1px solid var(--line);max-width:880px}
-  .faq details{border-bottom:1px solid var(--line)}
-  .faq summary{
-    cursor:pointer;padding:19px 0;font-weight:600;font-size:.95rem;
-    list-style:none;display:flex;align-items:center;gap:16px;color:var(--txt);
-  }
+  /* ---------- FAQ ---------- */
+  .faq{max-width:820px;margin:0 auto;display:grid;gap:12px}
+  .faq details{border-radius:18px;background:var(--panel);border:1px solid var(--line);transition:.2s}
+  .faq details[open]{background:var(--panel-2);border-color:var(--line-2)}
+  .faq summary{cursor:pointer;list-style:none;padding:20px 24px;font-weight:600;font-size:1.04rem;display:flex;justify-content:space-between;gap:16px;align-items:center}
   .faq summary::-webkit-details-marker{display:none}
-  .faq summary::after{
-    content:"+";margin-left:auto;color:var(--brass);font-weight:300;font-size:1.3rem;line-height:1;
-    transition:transform .2s;
-  }
-  .faq details[open] summary::after{transform:rotate(45deg)}
-  .faq .body{padding:0 44px 20px 0;color:var(--muted);font-size:.915rem}
+  .faq summary::after{content:"+";flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--panel-2);font:500 1.3rem/1 var(--sans);transition:.25s}
+  .faq details[open] summary::after{transform:rotate(45deg);background:var(--violet)}
+  .faq .body{padding:0 24px 20px;color:var(--muted)}
   .faq .body p{margin:0 0 10px}
-  .faq .body p:last-child{margin-bottom:0}
+  .faq .body strong{color:#fff}
+
+  /* ---------- avanzado ---------- */
+  .adv{max-width:960px;margin:0 auto}
+  .adv>details{border-radius:22px;border:1px solid var(--line-2);background:var(--panel)}
+  .adv>details>summary{cursor:pointer;list-style:none;padding:22px 26px;display:flex;align-items:center;gap:14px;font-family:var(--display);font-weight:700;font-size:1.25rem}
+  .adv>details>summary::-webkit-details-marker{display:none}
+  .adv>details>summary small{font-family:var(--sans);font-weight:500;font-size:.9rem;color:var(--muted)}
+  .adv>details>summary::after{content:"";margin-left:auto;width:10px;height:10px;border-right:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(45deg);transition:.25s}
+  .adv>details[open]>summary::after{transform:rotate(-135deg)}
+  .adv-body{padding:0 26px 26px}
+  .adv-body h4{font-family:var(--display);font-size:1.1rem;margin:26px 0 12px}
+  .tbl{overflow-x:auto;border-radius:14px;border:1px solid var(--line)}
+  table{width:100%;border-collapse:collapse;font-size:.92rem}
+  th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--dim);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;background:rgba(255,255,255,.02)}
+  tr:last-child td{border-bottom:0}
+  td:first-child{white-space:nowrap}
+  td{color:var(--muted)}
 
   /* ---------- cierre ---------- */
-  .closing{text-align:center;padding:96px 0 100px}
-  .closing h2{font-size:clamp(2rem,4vw,3rem);margin-bottom:12px}
-  .closing .sec-lead{margin:0 auto 28px;max-width:520px}
-  .closing .install-box{margin:32px auto 0;text-align:left;max-width:640px}
-  .closing .actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .closing{padding:130px 0 40px}
+  .closing-box{text-align:center;border-radius:36px;padding:clamp(40px,7vw,90px) clamp(20px,5vw,60px);position:relative;overflow:hidden;
+    background:radial-gradient(ellipse at 50% 0%,rgba(21,166,240,.35),transparent 60%),radial-gradient(ellipse at 100% 100%,rgba(92,196,247,.2),transparent 50%),var(--bg-2);border:1px solid var(--line-2)}
+  .closing-box h2{font-size:clamp(2.2rem,5.6vw,4.2rem);max-width:820px;margin:0 auto 18px}
+  .closing-box .sec-lead{margin:0 auto 34px}
+  .closing-box .term{max-width:720px;margin:0 auto 30px;text-align:left}
+  .closing-box .hero-actions{justify-content:center;margin:0}
 
-  /* ---------- pie ---------- */
-  footer{border-top:1px solid var(--line);padding:42px 0 54px;color:var(--dim);font-size:.84rem}
-  .foot{display:flex;gap:20px;align-items:center;flex-wrap:wrap;justify-content:space-between}
-  .foot-links{display:flex;gap:20px;flex-wrap:wrap}
-  .foot-links a{color:var(--muted)}
-  .foot-note{width:100%;margin-top:20px;padding-top:18px;border-top:1px solid var(--line);font-size:.77rem;line-height:1.75;color:#6f6a62}
-  .foot-note code{font-size:.9em}
+  footer{padding:50px 0 60px;color:var(--dim);font-size:.88rem}
+  .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;padding-bottom:22px;border-bottom:1px solid var(--line);margin-bottom:22px}
+  .foot-links{display:flex;gap:22px;flex-wrap:wrap}
+  .foot-links a{text-decoration:none;color:var(--muted)}
+  .foot-links a:hover{color:#fff}
+  footer p{max-width:760px;margin:0}
+
+  /* ---------- reveal ---------- */
+  .js .rv{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+  .js .rv.in{opacity:1;transform:none}
 
   @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important}
     html{scroll-behavior:auto}
-    .card:hover{background:var(--surface)}
-  }
-  @media (max-width:760px){
-    .nav-links a:not(.btn){display:none}
-    .hero{padding:52px 0 56px}
-    section{padding:64px 0}
-    .wrap{padding:0 20px}
-    .closing{padding:72px 0}
-  }
-  @media (max-width:520px){
-    pre{font-size:.74rem}
-    .ib-head span{font-size:.66rem}
-    .card-body{padding:20px}
-    .card{padding:22px}
-  }
-
-  /* ============================================================
-     TEMA VIVO · multimarca
-     Paleta saturada tipo Apple/Google sobre fondo índigo profundo
-     ============================================================ */
-  :root{
-    --bg:#070a14;
-    --bg-2:#0a0f1f;
-    --surface:rgba(255,255,255,.038);
-    --surface-2:#121a30;
-    --code:#070b17;
-    --line:rgba(255,255,255,.085);
-    --line-2:rgba(255,255,255,.2);
-    --txt:#f3f6ff;
-    --muted:#aab4ce;
-    --dim:#7883a1;
-    --brand:#6f8dff;
-    --brand-2:#a8beff;
-    --brand-ink:#060a18;
-    --violet:#a78bfa;
-    --cyan:#2dd4bf;
-    --mint:#34d399;
-    --coral:#ff7a70;
-    --amber:#fbbf24;
-    /* alias de la paleta anterior */
-    --brass:var(--brand);
-    --brass-2:var(--brand-2);
-    --brass-ink:var(--brand-ink);
-    --sage:var(--cyan);
-    --clay:var(--coral);
-    --radius:16px;
-    --sans:system-ui,-apple-system,"SF Pro Display","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-    --serif:var(--sans);
-  }
-
-  body::before{
-    background:
-      radial-gradient(900px 620px at 82% -8%, rgba(91,140,255,.30), transparent 62%),
-      radial-gradient(780px 620px at 6% 18%, rgba(167,139,250,.20), transparent 62%),
-      radial-gradient(720px 520px at 92% 62%, rgba(45,212,191,.14), transparent 65%),
-      radial-gradient(620px 480px at 38% 108%, rgba(255,122,112,.10), transparent 70%),
-      linear-gradient(180deg,#090d1a 0%,#070a14 46%,#060911 100%);
-  }
-  a{color:var(--brand-2)}
-  a:hover{text-decoration-color:currentColor}
-  ::selection{background:rgba(111,141,255,.35)}
-  h1,h2,h3,h4{font-weight:700;letter-spacing:-.028em}
-  h1{letter-spacing:-.035em}
-
-  .nav{background:rgba(7,10,20,.72);border-bottom-color:var(--line)}
-  .brand:hover{color:var(--brand-2)}
-  .logo{
-    border-color:rgba(111,141,255,.45);color:var(--brand);
-    background:linear-gradient(145deg,rgba(91,140,255,.22),rgba(167,139,250,.10));
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.09);
-  }
-
-  .badge{
-    color:#c9d6f7;border-color:rgba(111,141,255,.32);
-    background:linear-gradient(120deg,rgba(91,140,255,.12),rgba(167,139,250,.07));
-  }
-  .dot{background:var(--mint);box-shadow:0 0 0 3px rgba(52,211,153,.16)}
-
-  h1 em{
-    font-style:normal;
-    background:linear-gradient(100deg,#7fb0ff 0%,#a78bfa 52%,#2dd4bf 100%);
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-  }
-  .lead .hl{color:var(--brand-2)}
-
-  .hero::before{
-    background:
-      radial-gradient(closest-side, rgba(91,140,255,.26), rgba(91,140,255,.06) 55%, transparent 76%);
-  }
-  .hero::after{
-    content:"";position:absolute;pointer-events:none;
-    left:-160px;bottom:-220px;width:640px;height:520px;border-radius:50%;
-    background:radial-gradient(closest-side, rgba(167,139,250,.16), transparent 70%);
-  }
-  .hero-grid{position:relative;z-index:1}
-
-  .btn-primary{
-    background:linear-gradient(135deg,#5b8cff 0%,#8b5cf6 100%);
-    border-color:transparent;color:#fff;
-    box-shadow:0 12px 34px -12px rgba(108,99,255,.75),inset 0 1px 0 rgba(255,255,255,.22);
-  }
-  .btn-primary:hover{
-    background:linear-gradient(135deg,#6f9bff 0%,#9d7bff 100%);
-    border-color:transparent;filter:brightness(1.04);
-  }
-  .btn-ghost{border-color:var(--line-2);background:rgba(255,255,255,.02)}
-
-  .install-box{
-    border-color:var(--line);
-    box-shadow:0 30px 70px -42px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.02) inset;
-  }
-  .ib-head{background:rgba(255,255,255,.025)}
-  .tl i:nth-child(1){background:#ff5f57}
-  .tl i:nth-child(2){background:#febc2e}
-  .tl i:nth-child(3){background:#28c840}
-  pre{color:#dbe4fb}
-  pre .c{color:#6f7b9c}
-  pre .k{color:#9db7ff}
-  pre .s{color:#5eead4}
-  pre .p{color:#c4b5fd}
-  code{background:rgba(255,255,255,.075);color:#e3eaff}
-  .copy:hover{border-color:rgba(111,141,255,.5);color:var(--txt)}
-  .copy.done{color:var(--cyan);border-color:rgba(45,212,191,.5)}
-
-  .chip{border-color:var(--line);background:rgba(255,255,255,.02)}
-  .chip .i{color:var(--cyan)}
-
-  /* marcas */
-  .brands{margin-top:28px;padding-top:22px;border-top:1px solid var(--line)}
-  .brands-label{
-    font-size:.66rem;letter-spacing:.17em;text-transform:uppercase;
-    color:var(--dim);margin:0 0 11px;font-weight:600;
-  }
-  .brands-list{display:flex;flex-wrap:wrap;gap:7px}
-  .brand-pill{
-    font-size:.76rem;color:#d3dcf5;padding:5px 11px;border-radius:999px;
-    border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);
-  }
-  .brand-pill b{font-weight:600;color:#fff}
-  .brands-note{margin:11px 0 0;font-size:.75rem;color:var(--dim)}
-
-  .eyebrow{color:var(--brand-2)}
-  .eyebrow::before{
-    width:30px;height:2px;border-radius:2px;opacity:1;
-    background:linear-gradient(90deg,#5b8cff,#a78bfa,#2dd4bf);
-  }
-
-  .card{
-    background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.026));
-    border-color:var(--line);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 24px 50px -40px #000;
-    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-  }
-  .card:hover{
-    background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.035));
-    border-color:rgba(111,141,255,.42);
-  }
-  .card-flush{position:relative}
-  .card-flush::before{
-    content:"";position:absolute;left:0;right:0;top:0;height:2px;z-index:1;
-    background:linear-gradient(90deg,#5b8cff,#a78bfa,#2dd4bf);
-    opacity:0;transition:opacity .25s;
-  }
-  .card-flush:hover::before{opacity:1}
-  .card-figure{background:#080c18;border-bottom-color:var(--line)}
-  .figure{background:#080c18;border-color:var(--line)}
-  .figure figcaption{border-top-color:var(--line)}
-
-  .step{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border-color:var(--line)}
-  .step .n{color:var(--brand-2)}
-
-  .tag{
-    color:#a8beff;border-color:rgba(111,141,255,.4);background:rgba(111,141,255,.12);
-  }
-  .tag.green{color:#5eead4;border-color:rgba(45,212,191,.4);background:rgba(45,212,191,.10)}
-  .tag.amber{color:#c3cce4;border-color:var(--line-2);background:rgba(255,255,255,.03)}
-
-  ul.ticks li::before{background:var(--cyan);opacity:.9;box-shadow:0 0 0 3px rgba(45,212,191,.12)}
-  ul.ticks.cross li::before{background:var(--coral);box-shadow:0 0 0 3px rgba(255,122,112,.12)}
-
-  .callout{
-    border-color:rgba(255,122,112,.30);background:rgba(255,122,112,.08);
-  }
-  .callout .i{color:#ff9a92}
-  .callout p{color:#ffd9d5}
-  .callout strong{color:#fff}
-  .callout.info{border-color:rgba(45,212,191,.30);background:rgba(45,212,191,.07)}
-  .callout.info .i{color:var(--cyan)}
-  .callout.info p{color:#c9f3ee}
-  .callout.info strong{color:#fff}
-
-  .table-wrap{background:#0a0f1f;border-color:var(--line)}
-  th,td{border-bottom-color:rgba(255,255,255,.07)}
-  th{background:rgba(255,255,255,.025);color:#8e9ab8}
-  td code{background:rgba(255,255,255,.07)}
-
-  .mock{
-    background:linear-gradient(175deg,#141c34,#0a0f1f);
-    border-color:rgba(255,255,255,.14);
-    box-shadow:0 38px 80px -45px #000,inset 0 1px 0 rgba(255,255,255,.08),0 0 60px -30px rgba(91,140,255,.5);
-  }
-  .tile{background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.07);color:#d6def5}
-  .tile .ico{background:rgba(255,255,255,.06);color:#aeb9d6}
-  .tile.on{
-    background:linear-gradient(135deg,#5b8cff,#8b5cf6);border-color:transparent;color:#fff;
-    box-shadow:0 8px 22px -10px rgba(108,99,255,.9);
-  }
-  .tile.on .ico{background:rgba(255,255,255,.18);color:#fff}
-  .mock-menu{background:rgba(4,7,15,.55);border-color:rgba(255,255,255,.08)}
-  .mrow{color:#dbe3f8}
-  .mrow + .mrow{border-top-color:rgba(255,255,255,.07)}
-  .mrow .i{color:#96a2c2}
-  .switch{background:#2b3554}
-  .switch::after{background:#8b97b8}
-  .switch.on{background:linear-gradient(90deg,#5b8cff,#8b5cf6)}
-  .switch.on::after{background:#fff}
-
-  .req-group h3 .i{color:var(--brand)}
-  .faq summary::after{color:var(--brand-2)}
-  .foot-note{color:#727d9c}
-  .closing .sec-lead strong{color:var(--txt)}
-
-  kbd{
-    font-family:var(--mono);font-size:.78em;padding:.14em .42em;border-radius:5px;
-    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
-    box-shadow:0 1px 0 rgba(0,0,0,.4);
-  }
-
-  @media (prefers-reduced-motion:reduce){
-    .card-flush::before{transition:none}
+    .js .rv,.js #demo .ln{opacity:1;transform:none}
   }
 </style>
+<script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="grain" aria-hidden="true"></div>
 
 <header class="nav">
   <div class="wrap nav-in">
     <a class="brand" href="#top">
-      <span class="logo"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M9 21h6M12 17v4"/></svg></span>
-      CastNix <small>by GMR027</small>
+      <span class="logo"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M9 21h6M12 17v4"/></svg></span>
+      CastNix
     </a>
-    <nav class="nav-links">
-      <a href="#como">Cómo funciona</a>
-      <a href="#conexiones">Conexiones</a>
-      <a href="#requisitos">Requisitos</a>
+    <nav class="nav-links" aria-label="Principal">
       <a href="#instalar">Instalar</a>
-      <a href="#ajustes">Ajustes</a>
-      <a href="#faq">FAQ</a>
-      <a class="btn btn-ghost btn-sm" href="https://github.com/GMR027/CastNix" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="#tv">Preparar la TV</a>
+      <a href="#usar">Usar</a>
+      <a href="#faq">Ayuda</a>
+      <a href="https://github.com/GMR027/CastNix" target="_blank" rel="noopener">GitHub</a>
+      <a class="cta" href="#instalar">Instalar ahora</a>
     </nav>
   </div>
 </header>
 
 <main id="top">
-
   <!-- ================= HERO ================= -->
-  <section class="hero">
+  <section class="hero" style="padding-top:72px">
     <div class="wrap">
       <div class="hero-grid">
         <div>
-          <span class="badge"><span class="dot"></span> Linux · GNOME · GPL-3.0</span>
-          <h1>Tu escritorio Linux,<br><em>en la TV del salón.</em></h1>
+          <span class="pill"><b>GRATIS</b> Software libre para Linux con GNOME</span>
+          <h1>Tu Linux,<br><span class="grad">en la tele.</span></h1>
           <p class="lead">
-            <strong>CastNix</strong> espeja la pantalla de tu equipo a la televisión por
-            <strong>AirPlay</strong> o <strong>Google Cast</strong>, y añade un botón
-            <span class="hl">“Compartir TV”</span> al menú rápido de GNOME. Sin cables,
-            sin cuentas y sin configurar nada a mano.
+            CastNix manda la pantalla de tu ordenador a la televisión <strong>sin cables</strong>.
+            Un botón en el menú de GNOME y listo: funciona con <strong>AirPlay 2</strong> y
+            <strong>Google Cast</strong>, en casi cualquier marca.
           </p>
+          <div class="hero-actions">
+            <a class="btn btn-main" href="#instalar">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+              Instalar en 3 pasos
+            </a>
+            <a class="btn btn-ghost" href="https://github.com/GMR027/CastNix" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg>
+              Ver código
+            </a>
+          </div>
+          <div class="hero-facts">
+            <span><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg>Con sonido</span>
+            <span><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg>Sin cuentas ni nube</span>
+            <span><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg>Fedora · Ubuntu · Arch</span>
+          </div>
+        </div>
 
-          <div class="install-box">
-            <div class="ib-head">
-              <div class="tl"><i></i><i></i><i></i></div>
-              <span>instalación en un comando</span>
-              <button class="copy" data-copy="git clone https://github.com/GMR027/CastNix.git
-cd CastNix
-./install.sh">Copiar</button>
+        <div class="scene" aria-label="Animación: un portátil envía su escritorio a un televisor" role="img">
+          <div class="tv">
+            <div class="tv-frame">
+              <div class="screen">
+                <div class="desk"><div class="bar"></div><div class="win w1"></div><div class="win w2"></div><div class="dock"><i></i><i></i><i></i><i></i><i></i></div></div>
+                <span class="live">EN VIVO</span>
+              </div>
             </div>
-            <pre><code><span class="c"># descarga y listo</span>
-<span class="p">git</span> clone https://github.com/GMR027/CastNix.git
-<span class="p">cd</span> CastNix
-<span class="p">./</span>install.sh</code></pre>
+            <div class="tv-stand"></div>
           </div>
-
-          <div class="chips">
-            <span class="chip"><svg class="i" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg><b>Fedora</b> · Debian/Ubuntu · Arch</span>
-            <span class="chip"><svg class="i" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg><b>GNOME</b> 45 – 48</span>
-            <span class="chip"><svg class="i" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg><b>AirPlay 2</b> + <b>Google Cast</b></span>
+          <div class="beam" aria-hidden="true"><span></span><span></span><span></span></div>
+          <div class="laptop">
+            <div class="lid"><div class="screen"><div class="desk"><div class="bar"></div><div class="win w1"></div><div class="win w2"></div><div class="dock"><i></i><i></i><i></i><i></i><i></i></div></div></div></div>
+            <div class="base"></div>
           </div>
-
-          <div class="brands">
-            <p class="brands-label">Multimarca · sin ataduras</p>
-            <div class="brands-list">
-              <span class="brand-pill"><b>Samsung</b></span>
-              <span class="brand-pill"><b>LG</b></span>
-              <span class="brand-pill"><b>Sony</b></span>
-              <span class="brand-pill"><b>Philips</b></span>
-              <span class="brand-pill"><b>TCL</b></span>
-              <span class="brand-pill"><b>Hisense</b></span>
-              <span class="brand-pill"><b>Panasonic</b></span>
-              <span class="brand-pill"><b>Apple TV</b></span>
-              <span class="brand-pill"><b>Chromecast</b></span>
-              <span class="brand-pill"><b>Android TV</b></span>
-            </div>
-            <p class="brands-note">Si el televisor habla AirPlay 2 o Google Cast, funciona. No hace
-            falta una marca ni un modelo concreto.</p>
-          </div>
+          <div class="float-chip fc1"><span class="ic"><svg viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M9 21h6M12 17v4"/></svg></span><div>Compartir TV<small>TV del salón · conectado</small></div></div>
+          <div class="float-chip fc2"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 9.2v5.6h2.8L12 19V5L6.8 9.2H4z"/><path d="M16 8.6a5 5 0 0 1 0 6.8"/></svg></span><div>Audio incluido<small>1080p · H.264</small></div></div>
         </div>
+      </div>
+    </div>
 
-        <figure class="hero-figure">
-          <img src="assets/hero.svg" alt="Ilustración: un portátil comparte su escritorio con un televisor de salón" width="900" height="640">
-          <figcaption>Escritorio → salón, por la red local</figcaption>
-        </figure>
+    <div class="marquee" aria-label="Marcas compatibles">
+      <p class="marquee-label">Funciona con televisores de</p>
+      <div class="marquee-track">
+        <span class="hi">Samsung</span><span>LG</span><span class="hi">Sony</span><span>Philips</span><span class="hi">TCL</span><span>Hisense</span><span class="hi">Panasonic</span><span>Apple TV</span><span class="hi">Chromecast</span><span>Android TV</span><span class="hi">Google TV</span><span>Vizio</span>
+        <span class="hi" aria-hidden="true">Samsung</span><span aria-hidden="true">LG</span><span class="hi" aria-hidden="true">Sony</span><span aria-hidden="true">Philips</span><span class="hi" aria-hidden="true">TCL</span><span aria-hidden="true">Hisense</span><span class="hi" aria-hidden="true">Panasonic</span><span aria-hidden="true">Apple TV</span><span class="hi" aria-hidden="true">Chromecast</span><span aria-hidden="true">Android TV</span><span class="hi" aria-hidden="true">Google TV</span><span aria-hidden="true">Vizio</span>
       </div>
     </div>
   </section>
 
-  <!-- ================= CÓMO FUNCIONA ================= -->
-  <section id="como">
-    <div class="wrap">
-      <p class="eyebrow">Cómo funciona</p>
-      <h2>Un botón, dos protocolos, cero configuración</h2>
-      <p class="sec-lead">
-        CastNix reúne las dos piezas que normalmente hay que montar a mano: un emisor
-        AirPlay 2 para Linux y una extensión que lo controla desde el menú rápido.
-      </p>
-
-      <div class="steps grid g3" style="margin-bottom:26px">
-        <div class="step">
-          <span class="n">01</span>
-          <h4>Captura la pantalla</h4>
-          <p>En Wayland usa el portal de escritorio (<code>pipewiresrc</code>); en X11,
-          <code>ximagesrc</code>. GNOME pide permiso la primera vez.</p>
-        </div>
-        <div class="step">
-          <span class="n">02</span>
-          <h4>Codifica en H.264</h4>
-          <p>GStreamer escala a la resolución que negocia la TV y codifica con
-          <code>x264enc</code> en formato I420, el que entienden los televisores.</p>
-        </div>
-        <div class="step">
-          <span class="n">03</span>
-          <h4>Envía a la televisión</h4>
-          <p>El emisor abre la sesión AirPlay en el puerto <code>7000</code> y transmite
-          vídeo y audio sincronizados. Para Cast se usa GNOME Network Displays.</p>
-        </div>
-      </div>
-
-      <figure class="figure">
-        <img src="assets/pipeline.svg" alt="Diagrama del flujo: captura con PipeWire o X11, codificación H.264 con x264enc y envío por los puertos 7000 u 8009" width="1100" height="260">
-        <figcaption>Captura · codificación por software · envío directo, sin servidores intermedios</figcaption>
-      </figure>
-
-      <div class="callout info">
-        <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5.5c0 4-2.9 7.7-7 9.5-4.1-1.8-7-5.5-7-9.5V6l7-3z"/><path d="M9.2 12.2l2 2 3.6-3.8"/></svg>
-        <p><strong>Sin cuenta ni nube.</strong> Todo va directo por tu red local: no hay
-        servidores intermedios, ni telemetría, ni registro en ningún servicio. El
-        emparejamiento se guarda en tu equipo y se puede borrar cuando quieras.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= CONEXIONES ================= -->
-  <section id="conexiones">
-    <div class="wrap">
-      <p class="eyebrow">Conexiones permitidas</p>
-      <h2>Qué puedes transmitir y con qué</h2>
-      <p class="sec-lead">
-        Dos protocolos abiertos, muchas marcas. No importa qué televisor tengas: si
-        soporta AirPlay 2 o Google Cast, CastNix lo encuentra en la red y lo usa.
-      </p>
-
-      <div class="grid g2">
-        <article class="card card-flush">
-          <div class="card-figure">
-            <img src="assets/airplay.svg" alt="Ilustración: un portátil envía su pantalla a un televisor mediante AirPlay" width="640" height="320">
-          </div>
-          <div class="card-body">
-            <span class="tag">AirPlay 2 · recomendado</span>
-            <h3>AirPlay con doubletake</h3>
-            <p>Espejo del escritorio completo, con audio del sistema, hacia cualquier
-            televisor o receptor compatible con AirPlay 2.</p>
-            <ul class="ticks">
-              <li>Samsung, LG, Sony, Philips, TCL, Hisense, Vizio… con AirPlay 2</li>
-              <li>Apple TV y cajas compatibles con AirPlay 2</li>
-              <li>Modelos de 2019 en adelante (según marca y firmware)</li>
-              <li>Receptores AirPlay 2, p. ej. <code>shairport-sync</code></li>
-            </ul>
-            <span class="mini">Puerto <code>7000/tcp</code> · emparejamiento por PIN de 4 dígitos</span>
-          </div>
-        </article>
-
-        <article class="card card-flush">
-          <div class="card-figure">
-            <img src="assets/cast.svg" alt="Ilustración: un equipo envía su pantalla a un televisor mediante Google Cast" width="640" height="320">
-          </div>
-          <div class="card-body">
-            <span class="tag green">Google Cast</span>
-            <h3>Google Cast con GNOME Network Displays</h3>
-            <p>La alternativa para televisores con Chromecast integrado o Android TV, y
-            para los modelos que no traen AirPlay.</p>
-            <ul class="ticks">
-              <li>Android TV y Google TV</li>
-              <li>Chromecast y Chromecast con Google TV</li>
-              <li>Samsung, LG, Sony, Philips, TCL, Hisense… con Cast integrado</li>
-              <li>Pantallas y altavoces con Google Cast</li>
-            </ul>
-            <span class="mini">Puerto <code>8009/tcp</code> · se abre desde el mismo menú</span>
-          </div>
-        </article>
-      </div>
-
-      <div class="callout">
-        <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.9a2 2 0 0 1 3.4 0l8 13.4a2 2 0 0 1-1.7 3H4a2 2 0 0 1-1.7-3l8-13.4z"/><path d="M12 9v4.5"/><circle cx="12" cy="16.8" r=".9" fill="currentColor" stroke="none"/></svg>
-        <p><strong>Una sola sesión a la vez.</strong> AirPlay y Cast no pueden estar
-        activos al mismo tiempo: si enciendes uno, apaga el otro. Muchos televisores
-        modernos anuncian las dos tecnologías; CastNix usa la que tú actives, y mantener
-        ambas abiertas produce cortes o una imagen congelada.</p>
-      </div>
-
-      <div class="grid g2" style="margin-top:20px">
-        <div class="card">
-          <span class="tag amber">Qué sí hace</span>
-          <ul class="ticks">
-            <li>Espejo de todo el escritorio en tiempo real</li>
-            <li>Audio del sistema en la TV</li>
-            <li>Elegir la TV si hay varias en la red</li>
-            <li>Recordar el televisor y emparejarlo una sola vez</li>
-            <li>Encender y apagar desde el menú rápido</li>
-            <li>Diagnóstico del estado de AirPlay y de la extensión</li>
-          </ul>
-        </div>
-        <div class="card">
-          <span class="tag amber">Qué no hace</span>
-          <ul class="ticks cross">
-            <li>No es Miracast ni Wi‑Fi Display genérico</li>
-            <li>No envía contenido protegido con DRM</li>
-            <li>No controla la TV (volumen, canales, encendido)</li>
-            <li>No transmite desde el móvil: emite desde el PC</li>
-            <li>No sustituye a un AirPlay nativo de macOS</li>
-            <li>No funciona entre redes distintas ni por internet</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= REQUISITOS ================= -->
-  <section id="requisitos">
-    <div class="wrap">
-      <p class="eyebrow">Requisitos</p>
-      <h2>Lo que necesitas antes de empezar</h2>
-      <p class="sec-lead">
-        El instalador comprueba y resuelve casi todo. Esto es lo que debe existir de
-        antemano.
-      </p>
-
-      <div class="split" style="align-items:center">
-        <figure class="figure">
-          <img src="assets/network.svg" alt="Diagrama: el equipo y el televisor en la misma red local, con el router en el centro" width="520" height="420">
-          <figcaption>Equipo y TV en la misma subred</figcaption>
-        </figure>
-
-        <div class="req">
-          <div class="req-group">
-            <h3><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="10.5" rx="1.6"/><path d="M2 19h20"/></svg> Tu equipo</h3>
-            <ul class="ticks">
-              <li>Linux con <strong>GNOME</strong> 45 o superior (probado en 48)</li>
-              <li>Sesión <strong>Wayland</strong> recomendada, X11 también vale</li>
-              <li><strong>sudo</strong> para instalar paquetes</li>
-              <li>Conexión a internet durante la instalación</li>
-              <li>~150 MB de disco para Go, GStreamer y los binarios</li>
-            </ul>
-          </div>
-          <div class="req-group">
-            <h3><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4" width="19" height="12.5" rx="2"/><path d="M8 20.5h8M12 16.5v4"/></svg> La televisión</h3>
-            <ul class="ticks">
-              <li>Compatible con <strong>AirPlay 2</strong> o <strong>Google Cast</strong></li>
-              <li><strong>AirPlay activado</strong> en los ajustes del televisor</li>
-              <li>Misma red que el equipo</li>
-              <li>Encendida y sin otra sesión de espejo en curso</li>
-              <li>El PIN a mano la primera vez, solo para emparejar</li>
-            </ul>
-          </div>
-          <div class="req-group">
-            <h3><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.2 8.8a15.5 15.5 0 0 1 19.6 0"/><path d="M5.4 12.2a10.6 10.6 0 0 1 13.2 0"/><path d="M8.6 15.6a5.7 5.7 0 0 1 6.8 0"/><circle cx="12" cy="19.2" r="1.1" fill="currentColor" stroke="none"/></svg> La red</h3>
-            <ul class="ticks">
-              <li>PC y TV en la <strong>misma subred</strong></li>
-              <li>mDNS/Bonjour permitido (sin aislar clientes en el router)</li>
-              <li>Puerto <code>7000</code> accesible para AirPlay</li>
-              <li>Puerto <code>8009</code> accesible para Cast</li>
-              <li>Wi‑Fi 5 o cable para 1080p sin tirones</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="callout info">
-        <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
-        <p><strong>Comprueba el televisor en 5 segundos.</strong> Si el puerto 7000
-        responde, AirPlay está encendido; si la TV contesta al ping pero el puerto está
-        cerrado, está apagado en los ajustes del televisor.</p>
-      </div>
-
-      <div class="install-box" style="margin-top:18px;max-width:none">
-        <div class="ib-head">
-          <div class="tl"><i></i><i></i><i></i></div>
-          <span>diagnóstico rápido</span>
-          <button class="copy" data-copy="timeout 2 bash -c 'exec 3<>/dev/tcp/192.168.1.108/7000' && echo 'AirPlay activo' || echo 'AirPlay apagado o TV apagada'">Copiar</button>
-        </div>
-        <pre><code><span class="c"># sustituye la IP por la de tu televisor</span>
-timeout 2 bash -c <span class="s">'exec 3&lt;&gt;/dev/tcp/192.168.1.108/7000'</span> \
-  &amp;&amp; <span class="p">echo</span> <span class="s">'AirPlay activo'</span> || <span class="p">echo</span> <span class="s">'AirPlay apagado'</span></code></pre>
-      </div>
-
-      <div class="callout">
-        <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="7.8" r=".9" fill="currentColor" stroke="none"/></svg>
-        <p><strong>Activa AirPlay en la TV la primera vez</strong> si tu modelo lo trae
-        desactivado: en <em>LG webOS</em>, Inicio → Panel de inicio → AirPlay y HomeKit; en
-        <em>Samsung</em>, Ajustes → General → Apple AirPlay; en <em>Sony, Philips, TCL o
-        Hisense</em> suele estar en Ajustes → Red o Pantalla. En Android TV y Chromecast no
-        hace falta: Cast viene activo.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= INSTALACIÓN ================= -->
+  <!-- ================= INSTALAR ================= -->
   <section id="instalar">
     <div class="wrap">
-      <p class="eyebrow">Instalación</p>
-      <h2>Descarga, ejecuta, empareja</h2>
-      <p class="sec-lead">
-        El instalador hace todo de una pasada: dependencias, compilación, extensión,
-        búsqueda de la TV, comprobación de AirPlay y emparejamiento por PIN.
-      </p>
+      <div class="center rv">
+        <p class="eyebrow">Instalación</p>
+        <h2>Instálalo en <span class="grad">3 pasos</span>.<br>Sin saber de Linux.</h2>
+        <p class="sec-lead">Copia, pega y escribe un PIN. El instalador se encarga de todo lo demás: descarga lo que falta, lo prepara y busca tu tele.</p>
+      </div>
 
-      <div class="grid">
-        <div class="install-box" style="max-width:none">
-          <div class="ib-head">
-            <div class="tl"><i></i><i></i><i></i></div>
-            <span>clonando el repositorio</span>
-            <button class="copy" data-copy="git clone https://github.com/GMR027/CastNix.git
-cd CastNix
-./install.sh">Copiar</button>
-          </div>
-          <pre><code><span class="p">git</span> clone https://github.com/GMR027/CastNix.git
-<span class="p">cd</span> CastNix
-<span class="p">./</span>install.sh</code></pre>
+      <div class="pre rv">
+        <div><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span><p style="margin:0"><b>Linux con GNOME</b><span>Fedora, Ubuntu, Debian, Arch…</span></p></div>
+        <div><span class="ic"><svg viewBox="0 0 24 24"><path d="M2.2 8.8a15.5 15.5 0 0 1 19.6 0"/><path d="M5.4 12.2a10.6 10.6 0 0 1 13.2 0"/><path d="M8.6 15.6a5.7 5.7 0 0 1 6.8 0"/><circle cx="12" cy="19.2" r="1" fill="#fff"/></svg></span><p style="margin:0"><b>Misma Wi‑Fi</b><span>El PC y la tele en la misma red</span></p></div>
+        <div><span class="ic"><svg viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="12.5" rx="2"/><path d="M12 13.4l3.9 5.6H8.1z"/></svg></span><p style="margin:0"><b>Tele encendida</b><span>Con AirPlay 2 o Google Cast</span></p></div>
+      </div>
+
+      <div class="install rv">
+        <p class="distro-q">¿Qué Linux usas?</p>
+        <div class="tabs" role="tablist" aria-label="Distribución">
+          <button class="tab" role="tab" aria-selected="true" aria-controls="p-ubuntu" id="t-ubuntu"><span class="dl dl-ubuntu">U</span>Ubuntu / Debian / Mint</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="p-fedora" id="t-fedora" tabindex="-1"><span class="dl dl-fedora">F</span>Fedora</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="p-arch" id="t-arch" tabindex="-1"><span class="dl dl-arch">A</span>Arch / Manjaro</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="p-other" id="t-other" tabindex="-1"><span class="dl dl-other">?</span>No lo sé</button>
         </div>
 
-        <div class="install-box" style="max-width:none">
-          <div class="ib-head">
-            <div class="tl"><i></i><i></i><i></i></div>
-            <span>sin clonar nada</span>
-            <button class="copy" data-copy="REPO_URL=https://github.com/GMR027/CastNix.git bash <(curl -fsSL https://raw.githubusercontent.com/GMR027/CastNix/main/install.sh)">Copiar</button>
+        <div class="steps">
+          <!-- Paso 1 -->
+          <div class="step">
+            <div class="num">1</div>
+            <div>
+              <h3>Abre una terminal</h3>
+              <p>Pulsa <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd>. Si no se abre nada, pulsa la tecla
+              <kbd>Super</kbd> (la del logo de Windows), escribe <strong>Terminal</strong> y pulsa <kbd>Enter</kbd>.</p>
+            </div>
           </div>
-          <pre><code><span class="p">REPO_URL</span>=https://github.com/GMR027/CastNix.git \
-  <span class="p">bash</span> &lt;(<span class="p">curl</span> -fsSL \
-  https://raw.githubusercontent.com/GMR027/CastNix/main/install.sh)</code></pre>
+
+          <!-- Paso 2 -->
+          <div class="step">
+            <div class="num">2</div>
+            <div>
+              <h3>Copia y pega este comando</h3>
+              <p>Pulsa <strong>Copiar</strong>, pégalo en la terminal con <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>V</kbd> y pulsa <kbd>Enter</kbd>.
+              Te pedirá tu contraseña de usuario: al escribirla <strong>no se ven los caracteres</strong>, es normal.</p>
+
+              <div class="panel" id="p-ubuntu" role="tabpanel" aria-labelledby="t-ubuntu">
+                <div class="term">
+                  <div class="term-head"><div class="dots"><i></i><i></i><i></i></div><span>Ubuntu / Debian / Mint</span>
+                    <button class="copy" data-copy="sudo apt install -y git && git clone https://github.com/GMR027/CastNix.git && cd CastNix && ./install.sh"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h9"/></svg>Copiar</button></div>
+<pre><code><span class="ps">$ </span><span class="p">sudo apt install</span> -y git <span class="k">&amp;&amp;</span> \
+  <span class="p">git clone</span> https://github.com/GMR027/CastNix.git <span class="k">&amp;&amp;</span> \
+  <span class="p">cd</span> CastNix <span class="k">&amp;&amp;</span> <span class="p">./install.sh</span></code></pre>
+                </div>
+              </div>
+              <div class="panel" id="p-fedora" role="tabpanel" aria-labelledby="t-fedora" hidden>
+                <div class="term">
+                  <div class="term-head"><div class="dots"><i></i><i></i><i></i></div><span>Fedora</span>
+                    <button class="copy" data-copy="sudo dnf install -y git && git clone https://github.com/GMR027/CastNix.git && cd CastNix && ./install.sh"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h9"/></svg>Copiar</button></div>
+<pre><code><span class="ps">$ </span><span class="p">sudo dnf install</span> -y git <span class="k">&amp;&amp;</span> \
+  <span class="p">git clone</span> https://github.com/GMR027/CastNix.git <span class="k">&amp;&amp;</span> \
+  <span class="p">cd</span> CastNix <span class="k">&amp;&amp;</span> <span class="p">./install.sh</span></code></pre>
+                </div>
+                <div class="note"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="7.8" r=".6"/></svg><p style="margin:0">En Fedora el instalador activa <strong>RPM Fusion</strong> si hace falta, para tener el codificador de vídeo.</p></div>
+              </div>
+              <div class="panel" id="p-arch" role="tabpanel" aria-labelledby="t-arch" hidden>
+                <div class="term">
+                  <div class="term-head"><div class="dots"><i></i><i></i><i></i></div><span>Arch / Manjaro / EndeavourOS</span>
+                    <button class="copy" data-copy="sudo pacman -S --needed --noconfirm git && git clone https://github.com/GMR027/CastNix.git && cd CastNix && ./install.sh"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h9"/></svg>Copiar</button></div>
+<pre><code><span class="ps">$ </span><span class="p">sudo pacman -S</span> --needed --noconfirm git <span class="k">&amp;&amp;</span> \
+  <span class="p">git clone</span> https://github.com/GMR027/CastNix.git <span class="k">&amp;&amp;</span> \
+  <span class="p">cd</span> CastNix <span class="k">&amp;&amp;</span> <span class="p">./install.sh</span></code></pre>
+                </div>
+              </div>
+              <div class="panel" id="p-other" role="tabpanel" aria-labelledby="t-other" hidden>
+                <p style="margin:0 0 12px">Primero averígualo: pega esto en la terminal y mira la línea <code>NAME=</code>.</p>
+                <div class="term">
+                  <div class="term-head"><div class="dots"><i></i><i></i><i></i></div><span>¿Qué distribución tengo?</span>
+                    <button class="copy" data-copy="grep -E '^(NAME|ID_LIKE)=' /etc/os-release"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h9"/></svg>Copiar</button></div>
+<pre><code><span class="ps">$ </span><span class="p">grep</span> -E <span class="h">'^(NAME|ID_LIKE)='</span> /etc/os-release
+<span class="c">NAME="Ubuntu"   → elige la pestaña Ubuntu / Debian
+NAME="Fedora"   → elige la pestaña Fedora
+NAME="Arch…"    → elige la pestaña Arch</span></code></pre>
+                </div>
+                <div class="note warn"><svg viewBox="0 0 24 24"><path d="M10.3 3.9a2 2 0 0 1 3.4 0l8 13.4a2 2 0 0 1-1.7 3H4a2 2 0 0 1-1.7-3z"/><path d="M12 9v4.5"/><circle cx="12" cy="16.8" r=".6"/></svg><p style="margin:0">¿Otra distribución? Instala a mano Go, GStreamer con <code>x264enc</code>, PipeWire, Avahi y <code>xdg-desktop-portal-gnome</code>, y luego ejecuta <code>./install.sh --no-deps</code>.</p></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Paso 3 -->
+          <div class="step">
+            <div class="num">3</div>
+            <div>
+              <h3>Escribe el PIN que sale en la tele</h3>
+              <p>El instalador busca tu televisión solo. Cuando la encuentre, en la tele aparecerá un
+              <strong>código de 4 números</strong>: escríbelo en la terminal y pulsa <kbd>Enter</kbd>. Solo se hace una vez.</p>
+              <div class="pin-demo">
+                <div class="pin" aria-label="Ejemplo de PIN: 4 8 1 5"><b>4</b><b>8</b><b>1</b><b>5</b></div>
+                <small>¿No aparece el PIN? Activa AirPlay en la tele, <a href="#tv" style="color:var(--cyan)">aquí te explicamos cómo</a>. El instalador espera a que lo hagas.</small>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <h3 style="margin-top:42px">Qué hace el instalador</h3>
-      <div class="table-wrap" style="margin-top:14px">
-        <table>
-          <thead><tr><th>Paso</th><th>Detalle</th></tr></thead>
-          <tbody>
-            <tr><td>1 · Dependencias</td><td>Go, GStreamer, <code>x264enc</code>, PipeWire, Avahi y el portal de GNOME. En Fedora habilita RPM Fusion si falta <code>x264enc</code></td></tr>
-            <tr><td>2 · Compilación</td><td>Compila <code>doubletake</code> y <code>doubletake-ctl</code> desde <code>doubletake-src/</code>. Las dependencias Go van vendorizadas: no necesita red.</td></tr>
-            <tr><td>3 · Instalación</td><td>Binarios, script, diagnóstico, extensión del menú rápido y lanzador en <code>~/.local</code></td></tr>
-            <tr><td>4 · Compatibilidad</td><td>Ajusta <code>shell-version</code> de la extensión a la versión de GNOME detectada.</td></tr>
-            <tr><td>5 · Descubrimiento</td><td>Busca la TV por mDNS (AirPlay y, si no, Google Cast) y comprueba el puerto 7000.</td></tr>
-            <tr><td>6 · AirPlay apagado</td><td>Lo explica, indica la ruta en el menú de la TV y espera a que lo actives para reintentar.</td></tr>
-            <tr><td>7 · Emparejamiento</td><td>Pide el PIN de 4 dígitos que aparece en pantalla y guarda las credenciales con permisos 600.</td></tr>
-            <tr><td>8 · Prueba</td><td>Opcionalmente instala Google Cast por Flatpak y hace una prueba de 20 segundos.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3 style="margin-top:42px">Opciones</h3>
-      <div class="table-wrap" style="margin-top:14px">
-        <table>
-          <thead><tr><th>Comando</th><th>Para qué sirve</th></tr></thead>
-          <tbody>
-            <tr><td><code>./install.sh --with-cast</code></td><td>Instala además GNOME Network Displays (Google Cast) por Flatpak.</td></tr>
-            <tr><td><code>./install.sh --target 192.168.1.50</code></td><td>Fija la TV si hay varias o si mDNS falla.</td></tr>
-            <tr><td><code>./install.sh --pair</code></td><td>Fuerza un emparejamiento nuevo aunque ya haya credenciales.</td></tr>
-            <tr><td><code>./install.sh --no-pair</code></td><td>Instala sin emparejar.</td></tr>
-            <tr><td><code>./install.sh --test</code></td><td>Hace una prueba de 20 s al terminar.</td></tr>
-            <tr><td><code>./install.sh --no-deps</code></td><td>No toca el gestor de paquetes.</td></tr>
-            <tr><td><code>./install.sh --yes</code></td><td>Sin preguntas (no empareja ni prueba).</td></tr>
-            <tr><td><code>./uninstall.sh</code></td><td>Desinstala todo, incluida la configuración y las credenciales.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="callout info">
-        <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 6.3"/><path d="M20 4.5V11h-6.5"/></svg>
-        <p><strong>Si el botón no aparece</strong> al terminar, cierra sesión y vuelve a
-        entrar. GNOME solo carga las extensiones nuevas al iniciar la sesión.</p>
+        <div class="done-row">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M7.5 12.3l3 3 6-6.3"/></svg>
+          <p><strong>¡Listo!</strong> Cierra sesión y vuelve a entrar. Verás el botón <strong>Compartir TV</strong> en el menú de arriba a la derecha.</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ================= USO ================= -->
-  <section id="uso">
+  <!-- ================= QUÉ VERÁS ================= -->
+  <section id="demo-sec">
     <div class="wrap">
-      <p class="eyebrow">Uso diario</p>
-      <h2>Tres formas de compartir</h2>
-      <p class="sec-lead">
-        El botón vive junto a Wi‑Fi, Sonido y Brillo. Desde ahí enciendes AirPlay o
-        abres Google Cast, sin abrir una terminal.
-      </p>
-
-      <div class="split" style="grid-template-columns:420px 1fr;gap:44px">
-        <div class="mock">
-          <div class="mock-top"><span>● ● ●</span><span class="grow">Menú rápido de GNOME</span></div>
-          <div class="tiles">
-            <div class="tile"><span class="ico"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.2 8.8a15.5 15.5 0 0 1 19.6 0"/><path d="M5.4 12.2a10.6 10.6 0 0 1 13.2 0"/><path d="M8.6 15.6a5.7 5.7 0 0 1 6.8 0"/><circle cx="12" cy="19.2" r="1.1" fill="currentColor" stroke="none"/></svg></span>Wi‑Fi</div>
-            <div class="tile on"><span class="ico"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M9 21h6M12 17v4"/></svg></span>Compartir TV</div>
-            <div class="tile"><span class="ico"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.2v5.6h2.8L12 19V5L6.8 9.2H4z"/><path d="M16 8.6a5 5 0 0 1 0 6.8"/><path d="M18.6 6a8.6 8.6 0 0 1 0 12"/></svg></span>Sonido</div>
-            <div class="tile"><span class="ico"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"/></svg></span>Brillo</div>
-          </div>
-          <div class="mock-menu">
-            <div class="mrow">
-              <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M9 21h6M12 17v4"/></svg>
-              <div>Compartir pantalla<span class="sub">TV del salón · 192.168.1.108</span></div>
-              <span class="switch on"></span>
-            </div>
-            <div class="mrow">
-              <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3.8" width="18" height="12.4" rx="2"/><path d="M12 13.4l3.9 5.6H8.1l3.9-5.6z" fill="currentColor" stroke="none"/></svg>
-              <div>AirPlay<span class="sub">Transmitiendo por AirPlay</span></div>
-              <span class="switch on"></span>
-            </div>
-            <div class="mrow">
-              <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 7V5.6A1.6 1.6 0 0 1 4.1 4h15.8A1.6 1.6 0 0 1 21.5 5.6v12.8a1.6 1.6 0 0 1-1.6 1.6h-5.4"/><path d="M2.5 11.4a8.6 8.6 0 0 1 8.6 8.6M2.5 15.5a4.5 4.5 0 0 1 4.5 4.5"/><circle cx="2.9" cy="20.4" r="1" fill="currentColor" stroke="none"/></svg>
-              <div>Google Cast<span class="sub">Abrir GNOME Network Displays</span></div>
-              <span style="margin-left:auto;color:var(--dim);font-size:.9rem">›</span>
-            </div>
-          </div>
-          <p class="mock-cap">El botón aparece junto a Wi‑Fi, Sonido y Brillo.</p>
+      <div class="demo-wrap">
+        <div class="rv">
+          <p class="eyebrow">Qué verás</p>
+          <h2>El instalador<br>te lleva de la mano.</h2>
+          <p class="sec-lead" style="margin-bottom:30px">No tienes que configurar nada. Esto es lo que hace mientras tú esperas un par de minutos:</p>
+          <ul class="demo-list">
+            <li><i>01</i><div><b>Instala lo que falta</b><span>Usa el gestor de paquetes de tu sistema.</span></div></li>
+            <li><i>02</i><div><b>Prepara CastNix</b><span>Compila el emisor y añade el botón a GNOME.</span></div></li>
+            <li><i>03</i><div><b>Busca tu tele</b><span>La encuentra en tu red y comprueba que AirPlay está activo.</span></div></li>
+            <li><i>04</i><div><b>Empareja con PIN</b><span>Lo guarda en tu equipo, nunca en internet.</span></div></li>
+          </ul>
         </div>
-
-        <div class="grid" style="gap:22px">
-          <div>
-            <h4>Desde la terminal</h4>
-            <p style="color:var(--muted);font-size:.92rem;margin:0 0 10px">
-              Ejecuta <code>compartir-tv</code> y para con <kbd>Ctrl</kbd>+<kbd>C</kbd>.
-              Acepta los mismos ajustes que el botón.
-            </p>
-            <div class="install-box">
-              <div class="ib-head">
-                <div class="tl"><i></i><i></i><i></i></div>
-                <span>transmitir</span>
-                <button class="copy" data-copy="compartir-tv -width 1280 -height 720">Copiar</button>
-              </div>
-              <pre><code><span class="p">compartir-tv</span> -width 1280 -height 720</code></pre>
-            </div>
-          </div>
-
-          <div>
-            <h4>Diagnóstico</h4>
-            <p style="color:var(--muted);font-size:.92rem;margin:0 0 10px">
-              <code>check-tv-share.sh</code> dice si la extensión está cargada, qué IP
-              tiene la TV y si AirPlay está activo. El log guarda el motivo del último
-              intento.
-            </p>
-            <div class="install-box">
-              <div class="ib-head">
-                <div class="tl"><i></i><i></i><i></i></div>
-                <span>estado</span>
-                <button class="copy" data-copy="check-tv-share.sh
-tail -30 ~/.cache/compartir-tv.log">Copiar</button>
-              </div>
-              <pre><code><span class="p">check-tv-share.sh</span>
-<span class="p">tail</span> -30 ~/.cache/compartir-tv.log</code></pre>
-            </div>
-          </div>
+        <div class="term rv" id="demo" aria-label="Ejemplo de la salida del instalador">
+          <div class="term-head"><div class="dots"><i></i><i></i><i></i></div><span>./install.sh — ejemplo</span></div>
+<pre><code><span class="ln"><span class="ps">$ </span><span class="p">./install.sh</span></span>
+<span class="ln"> </span>
+<span class="ln"><span class="h">== Dependencias ==</span></span>
+<span class="ln"><span class="ok">  ✔</span> Go, GStreamer, PipeWire y Avahi listos</span>
+<span class="ln"><span class="h">== Compilando doubletake ==</span></span>
+<span class="ln"><span class="ok">  ✔</span> Emisor AirPlay 2 compilado</span>
+<span class="ln"><span class="h">== Extensión de GNOME ==</span></span>
+<span class="ln"><span class="ok">  ✔</span> Botón «Compartir TV» instalado</span>
+<span class="ln"><span class="h">== Buscando la televisión ==</span></span>
+<span class="ln"><span class="ok">  ✔</span> Encontrada: <span class="k">TV del salón</span> (192.168.1.108)</span>
+<span class="ln"><span class="ok">  ✔</span> AirPlay activo en el puerto 7000</span>
+<span class="ln"><span class="h">== Emparejamiento ==</span></span>
+<span class="ln"><span class="w">  ?</span> Escribe el PIN que aparece en la TV: <span class="k">4815</span></span>
+<span class="ln"><span class="ok">  ✔</span> Emparejado. ¡Todo listo! <span class="cursor"></span></span></code></pre>
         </div>
-      </div>
-
-      <div class="table-wrap" style="margin-top:28px">
-        <table>
-          <thead><tr><th>Se instala en</th><th>Qué es</th></tr></thead>
-          <tbody>
-            <tr><td><code>~/.local/bin/doubletake</code></td><td>Emisor AirPlay 2 compilado con el parche Wayland/I420.</td></tr>
-            <tr><td><code>~/.local/bin/compartir-tv</code></td><td>Wrapper: elige TV, reconstruye el entorno gráfico y comprueba el puerto 7000.</td></tr>
-            <tr><td><code>~/.local/bin/check-tv-share.sh</code></td><td>Diagnóstico de extensión y de AirPlay.</td></tr>
-            <tr><td><code>.../extensions/tv-share@edgar.local/</code></td><td>Extensión del menú rápido de GNOME.</td></tr>
-            <tr><td><code>~/.config/doubletake/credentials.json</code></td><td>Credenciales de emparejamiento (permisos 600).</td></tr>
-            <tr><td><code>~/.config/compartir-tv.conf</code></td><td>TV elegida, si se fijó con <code>--target</code>.</td></tr>
-            <tr><td><code>~/.cache/compartir-tv.log</code></td><td>Registro de cada intento de transmisión.</td></tr>
-          </tbody>
-        </table>
       </div>
     </div>
   </section>
 
-  <!-- ================= AJUSTES ================= -->
-  <section id="ajustes">
+  <!-- ================= PREPARAR LA TV ================= -->
+  <section id="tv">
     <div class="wrap">
-      <p class="eyebrow">Ajustes</p>
-      <h2>Cómo adaptarlo a tu caso</h2>
-      <p class="sec-lead">
-        Casi todo se puede cambiar sin reinstalar. Los ajustes se pasan como argumentos
-        o como variables de entorno.
-      </p>
-
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Ajuste</th><th>Qué hace</th><th>Ejemplo</th></tr></thead>
-          <tbody>
-            <tr>
-              <td><code>TV_SHARE_TARGET</code></td>
-              <td>IP o nombre de la TV. Útil si hay varias o si mDNS no responde.</td>
-              <td><code>TV_SHARE_TARGET=192.168.1.50 compartir-tv</code></td>
-            </tr>
-            <tr>
-              <td><code>TV_SHARE_NAME</code></td>
-              <td>Parte del nombre del servicio mDNS para elegir la TV.</td>
-              <td><code>TV_SHARE_NAME=salon compartir-tv</code></td>
-            </tr>
-            <tr>
-              <td><code>TV_SHARE_HOST</code></td>
-              <td>Nombre <code>.local</code> que se prueba antes de mDNS.</td>
-              <td><code>TV_SHARE_HOST=televisor.local</code></td>
-            </tr>
-            <tr>
-              <td><code>-width</code> / <code>-height</code></td>
-              <td>Resolución enviada. Bájala si la TV o el Wi‑Fi no dan para 1080p.</td>
-              <td><code>compartir-tv -width 1280 -height 720</code></td>
-            </tr>
-            <tr>
-              <td><code>-bitrate</code></td>
-              <td>Bitrate en kbps. Menos bitrate, menos tirones.</td>
-              <td><code>compartir-tv -bitrate 3000</code></td>
-            </tr>
-            <tr>
-              <td><code>TV_SHARE_LOG</code></td>
-              <td>Ruta alternativa del registro.</td>
-              <td><code>TV_SHARE_LOG=/tmp/tv.log compartir-tv</code></td>
-            </tr>
-            <tr>
-              <td><code>PREFIX</code></td>
-              <td>Dónde instalar los binarios (por defecto <code>~/.local</code>).</td>
-              <td><code>PREFIX=/opt/castnix ./install.sh</code></td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="center rv">
+        <p class="eyebrow">Preparar la tele</p>
+        <h2>Activa AirPlay <span class="grad">una sola vez</span>.</h2>
+        <p class="sec-lead">Algunas teles lo traen apagado de fábrica. Con el mando, ve a esta ruta según tu marca:</p>
       </div>
+      <div class="tvset">
+        <div class="tvcard rv">
+          <p class="brandname">LG</p><span class="proto ap">webOS · AirPlay</span>
+          <div class="path"><span>Inicio</span><em>›</em><span>Panel de inicio</span><em>›</em><span>AirPlay y HomeKit</span><em>›</em><span>Activado</span></div>
+        </div>
+        <div class="tvcard rv">
+          <p class="brandname">Samsung</p><span class="proto ap">Tizen · AirPlay</span>
+          <div class="path"><span>Ajustes</span><em>›</em><span>General</span><em>›</em><span>Apple AirPlay</span><em>›</em><span>Activado</span></div>
+        </div>
+        <div class="tvcard rv">
+          <p class="brandname">Sony · Philips · TCL · Hisense</p><span class="proto ap">AirPlay</span>
+          <div class="path"><span>Ajustes</span><em>›</em><span>Red o Pantalla</span><em>›</em><span>AirPlay</span></div>
+          <p>Si no lo ves, busca “AirPlay” en el buscador de ajustes.</p>
+        </div>
+        <div class="tvcard rv">
+          <p class="brandname">Android TV · Chromecast</p><span class="proto gc">Google Cast</span>
+          <div class="path"><span>Nada que hacer</span></div>
+          <p>Cast viene activado. Instala con <code>./install.sh --with-cast</code>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      <div class="grid g2" style="margin-top:22px">
-        <div class="card">
-          <h4><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 12l2.5 2.5L16 9"/></svg> Ajustar la TV guardada</h4>
-          <p>Si cambias de televisor o el router le da otra IP, vuelve a fijarla. Si la IP
-          guardada deja de responder, el script la descarta y busca de nuevo por mDNS.</p>
-          <div class="install-box" style="margin-top:14px">
-            <div class="ib-head">
-              <div class="tl"><i></i><i></i><i></i></div>
-              <span>fijar televisor</span>
-              <button class="copy" data-copy="./install.sh --target 192.168.1.50 --no-pair">Copiar</button>
-            </div>
-            <pre><code><span class="p">./</span>install.sh --target 192.168.1.50 --no-pair</code></pre>
+  <!-- ================= USAR ================= -->
+  <section id="usar">
+    <div class="wrap">
+      <div class="use">
+        <div class="qs rv" aria-label="Menú rápido de GNOME con el botón Compartir TV" role="img">
+          <div class="qs-top"><span>Menú rápido</span><span>100 % · 21:30</span></div>
+          <div class="qs-tiles">
+            <div class="qt"><svg viewBox="0 0 24 24"><path d="M2.2 8.8a15.5 15.5 0 0 1 19.6 0"/><path d="M5.4 12.2a10.6 10.6 0 0 1 13.2 0"/><path d="M8.6 15.6a5.7 5.7 0 0 1 6.8 0"/></svg>Wi‑Fi</div>
+            <div class="qt on"><svg viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M9 21h6M12 17v4"/></svg>Compartir TV</div>
+            <div class="qt"><svg viewBox="0 0 24 24"><path d="M6.5 6.5l11 11L12 23V1l5.5 5.5-11 11"/></svg>Bluetooth</div>
+            <div class="qt"><svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>Modo oscuro</div>
+          </div>
+          <div class="qs-menu">
+            <div class="qr"><svg viewBox="0 0 24 24"><rect x="3" y="3.8" width="18" height="12.4" rx="2"/><path d="M12 13.4l3.9 5.6H8.1z"/></svg><div>AirPlay<small>TV del salón · transmitiendo</small></div><span class="sw on"></span></div>
+            <div class="qr"><svg viewBox="0 0 24 24"><path d="M2.5 7V5.6A1.6 1.6 0 0 1 4.1 4h15.8a1.6 1.6 0 0 1 1.6 1.6v12.8a1.6 1.6 0 0 1-1.6 1.6h-5.4"/><path d="M2.5 11.4a8.6 8.6 0 0 1 8.6 8.6M2.5 15.5a4.5 4.5 0 0 1 4.5 4.5"/></svg><div>Google Cast<small>Abrir Network Displays</small></div><span class="sw"></span></div>
           </div>
         </div>
-        <div class="card">
-          <h4><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 6.3"/><path d="M20 4.5V11h-6.5"/></svg> Volver a emparejar</h4>
-          <p>Si la TV pide un PIN nuevo o cambiaste de equipo, borra las credenciales y
-          empareja otra vez.</p>
-          <div class="install-box" style="margin-top:14px">
-            <div class="ib-head">
-              <div class="tl"><i></i><i></i><i></i></div>
-              <span>nuevo PIN</span>
-              <button class="copy" data-copy="rm ~/.config/doubletake/credentials.json
-./install.sh --pair">Copiar</button>
-            </div>
-            <pre><code><span class="p">rm</span> ~/.config/doubletake/credentials.json
-<span class="p">./</span>install.sh --pair</code></pre>
+        <div class="rv">
+          <p class="eyebrow">Uso diario</p>
+          <h2>Un clic para empezar.<br>Otro para parar.</h2>
+          <p class="sec-lead" style="margin-bottom:34px">Sin abrir terminal, sin apps extra. El botón vive junto al Wi‑Fi.</p>
+          <div class="use-steps">
+            <div class="use-step"><span class="ic"><svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-8 8"/><path d="M10 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-4"/></svg></span><div><h3>Abre el menú</h3><p>Haz clic arriba a la derecha, donde están el sonido y la batería.</p></div></div>
+            <div class="use-step"><span class="ic"><svg viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M9 21h6M12 17v4"/></svg></span><div><h3>Pulsa «Compartir TV»</h3><p>La primera vez GNOME te pregunta qué pantalla compartir. Acepta y en segundos estás en la tele.</p></div></div>
+            <div class="use-step"><span class="ic"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></svg></span><div><h3>Vuelve a pulsar para parar</h3><p>O desde la terminal: <code>compartir-tv</code> y <kbd>Ctrl</kbd>+<kbd>C</kbd>.</p></div></div>
           </div>
         </div>
       </div>
+    </div>
+  </section>
 
-      <div class="callout">
-        <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18a8 8 0 1 1 16 0"/><path d="M12 18l4-5"/><circle cx="12" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg>
-        <p><strong>Rendimiento.</strong> <code>x264enc</code> es software: a 1080p30 usa
-        aproximadamente un 60 % de un núcleo. Si notas tirones o el ventilador, baja a
-        720p y 3000 kbps; la diferencia en una TV se nota poco.</p>
+  <!-- ================= VENTAJAS ================= -->
+  <section>
+    <div class="wrap">
+      <div class="center rv">
+        <p class="eyebrow">Por qué CastNix</p>
+        <h2>Todo lo que esperas.<br><span class="grad">Nada que configurar.</span></h2>
+        <p class="sec-lead">Lo que antes requería montar piezas a mano, ahora es un botón.</p>
+      </div>
+      <div class="bento">
+        <div class="bx wide c1 rv"><span class="glow"></span><span class="ic"><svg viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M9 21h6M12 17v4"/></svg></span>
+          <h3>Dos tecnologías, cualquier tele</h3><p>Si tu televisor entiende AirPlay 2 o Google Cast, CastNix lo encuentra y lo usa. Sin importar la marca.</p>
+          <div class="proto-pair"><span>AirPlay 2</span><span>Google Cast</span></div></div>
+        <div class="bx wide c2 rv"><span class="glow"></span><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4-2.9 7.7-7 9.5-4.1-1.8-7-5.5-7-9.5V6z"/><path d="M9.2 12.2l2 2 3.6-3.8"/></svg></span>
+          <h3>Privado de verdad</h3><p>Todo va directo por tu red de casa. Sin cuentas, sin nube, sin telemetría. El emparejamiento se queda en tu equipo.</p></div>
+        <div class="bx c3 rv"><span class="glow"></span><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 9.2v5.6h2.8L12 19V5L6.8 9.2H4z"/><path d="M16 8.6a5 5 0 0 1 0 6.8"/><path d="M18.6 6a8.6 8.6 0 0 1 0 12"/></svg></span>
+          <h3>Con sonido</h3><p>El audio del sistema suena en la tele, sincronizado con la imagen.</p></div>
+        <div class="bx c4 rv"><span class="glow"></span><span class="ic"><svg viewBox="0 0 24 24"><path d="M7 11V7a5 5 0 0 1 10 0v4"/><rect x="4" y="11" width="16" height="10" rx="2"/></svg></span>
+          <h3>Un PIN y ya</h3><p>Empareja una vez y recuerda tu tele para siempre.</p></div>
+        <div class="bx c5 rv"><span class="glow"></span><span class="ic"><svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span>
+          <h3>Wayland y X11</h3><p>Funciona en GNOME moderno, en las dos sesiones.</p></div>
       </div>
     </div>
   </section>
@@ -1149,107 +689,93 @@ tail -30 ~/.cache/compartir-tv.log">Copiar</button>
   <!-- ================= FAQ ================= -->
   <section id="faq">
     <div class="wrap">
-      <p class="eyebrow">Dudas frecuentes</p>
-      <h2>Preguntas que suelen aparecer</h2>
-      <p class="sec-lead">Si algo falla, lo más probable es que esté aquí.</p>
-
-      <div class="faq">
+      <div class="center rv">
+        <p class="eyebrow">Ayuda</p>
+        <h2>¿Algo no va?</h2>
+        <p class="sec-lead">Las soluciones a lo que suele pasar.</p>
+      </div>
+      <div class="faq rv">
         <details open>
-          <summary>El botón se enciende y se apaga solo. ¿Qué pasa?</summary>
-          <div class="body">
-            <p>AirPlay está <strong>apagado en la TV</strong>. El equipo conecta, pero nadie
-            escucha en el puerto 7000, así que la sesión se cierra de inmediato.</p>
-            <p>Actívalo con el mando. En <em>LG webOS</em>: Inicio → Panel de inicio → AirPlay
-            y HomeKit → Activado. En <em>Samsung</em>: Ajustes → General → Apple AirPlay. En
-            <em>Sony, Philips, TCL, Hisense</em> y otros: busca “AirPlay” en los ajustes de
-            red, pantalla o aplicaciones. Luego vuelve a pulsar el botón; no hace falta
-            reiniciar sesión.</p>
-          </div>
+          <summary>No aparece el botón «Compartir TV»</summary>
+          <div class="body"><p><strong>Cierra sesión y vuelve a entrar.</strong> GNOME solo carga las extensiones nuevas al iniciar sesión.</p></div>
         </details>
-
         <details>
-          <summary>La TV se queda en negro pero el botón dice que transmite</summary>
-          <div class="body">
-            <p>Es el síntoma clásico de un perfil H.264 que la TV no decodifica. El proyecto
-            compila <code>doubletake</code> con un parche que escala a la resolución
-            negociada y fuerza <code>I420</code> en lugar de High 4:4:4.</p>
-            <p>Si compilaste por tu cuenta sin ese parche, recompila desde
-            <code>doubletake-src/</code> o ejecuta otra vez <code>./install.sh</code>.</p>
-          </div>
+          <summary>El botón se enciende y se apaga solo</summary>
+          <div class="body"><p>AirPlay está <strong>apagado en la tele</strong>. Actívalo siguiendo <a href="#tv" style="color:var(--cyan)">la ruta de tu marca</a> y vuelve a pulsar el botón. No hace falta reiniciar.</p></div>
         </details>
-
         <details>
-          <summary>No encuentra la televisión</summary>
+          <summary>No encuentra mi televisión</summary>
           <div class="body">
-            <p>Comprueba que está encendida y en la misma red. Muchos routers aíslan a los
-            clientes Wi‑Fi entre sí (<em>AP isolation</em>), y eso rompe mDNS aunque el ping
-            funcione.</p>
-            <p>Si sigue sin aparecer, fíjala a mano:
-            <code>TV_SHARE_TARGET=192.168.1.50 compartir-tv</code>, o pasa
-            <code>--target</code> al instalador.</p>
+            <p>Comprueba que está encendida y en la <strong>misma Wi‑Fi</strong> que el PC. Algunos routers aíslan los dispositivos entre sí (“AP isolation”) y eso impide encontrarla.</p>
+            <p>Si conoces la IP de la tele, indícala tú: <code>./install.sh --target 192.168.1.50</code></p>
           </div>
         </details>
-
+        <details>
+          <summary>Se ve a tirones</summary>
+          <div class="body"><p>Baja la calidad: <code>compartir-tv -width 1280 -height 720 -bitrate 3000</code>. Usar cable o Wi‑Fi de 5 GHz también ayuda mucho.</p></div>
+        </details>
+        <details>
+          <summary>La tele se queda en negro</summary>
+          <div class="body"><p>Vuelve a ejecutar <code>./install.sh</code> desde la carpeta <code>CastNix</code>: recompila el emisor con el formato de vídeo que entienden los televisores.</p></div>
+        </details>
         <details>
           <summary>¿Puedo usar AirPlay y Google Cast a la vez?</summary>
-          <div class="body">
-            <p>No. La TV solo acepta una sesión de espejo; si abres las dos, una se queda
-            congelada o se cierra. Enciende una, apaga la otra.</p>
-          </div>
+          <div class="body"><p>No. La tele solo acepta una conexión: enciende una y apaga la otra.</p></div>
         </details>
-
         <details>
-          <summary>¿Funciona en X11 o solo en Wayland?</summary>
-          <div class="body">
-            <p>En los dos. En Wayland se captura por el portal de escritorio
-            (<code>pipewiresrc</code>); en X11, con <code>ximagesrc</code>. Wayland es el
-            camino recomendado en GNOME moderno.</p>
-          </div>
+          <summary>¿Necesito internet?</summary>
+          <div class="body"><p>Solo para instalar. Después, todo funciona dentro de tu red de casa.</p></div>
         </details>
-
-        <details>
-          <summary>¿Necesito internet para usarlo?</summary>
-          <div class="body">
-            <p>Solo para instalar dependencias y descargar el repositorio. Una vez
-            instalado, todo va por la red local y funciona sin conexión a internet.</p>
-          </div>
-        </details>
-
-        <details>
-          <summary>Hay tirones o el audio se desincroniza</summary>
-          <div class="body">
-            <p>Baja la resolución y el bitrate:
-            <code>compartir-tv -width 1280 -height 720 -bitrate 3000</code>. También ayuda
-            usar cable en el PC o Wi‑Fi 5 GHz. El codificador es software y compite por CPU
-            con el resto del sistema.</p>
-          </div>
-        </details>
-
-        <details>
-          <summary>¿Se puede instalar en otra distro que no sea Fedora, Debian o Arch?</summary>
-          <div class="body">
-            <p>El instalador cubre esas tres familias. En otras, usa
-            <code>--no-deps</code> e instala a mano Go, GStreamer con
-            <code>x264enc</code>, <code>pipewiresrc</code>, Avahi y
-            <code>xdg-desktop-portal-gnome</code>.</p>
-          </div>
-        </details>
-
-        <details>
-          <summary>¿Qué pasa con mis credenciales de emparejamiento?</summary>
-          <div class="body">
-            <p>Se guardan en <code>~/.config/doubletake/credentials.json</code> con permisos
-            <code>600</code> y son propias de este equipo. No se envían a ningún sitio. Si
-            cambias de PC puedes copiarlas, o emparejar de nuevo con
-            <code>./install.sh --pair</code>.</p>
-          </div>
-        </details>
-
         <details>
           <summary>¿Cómo lo desinstalo?</summary>
-          <div class="body">
-            <p>Desde el repositorio: <code>./uninstall.sh</code>. Borra binarios, extensión,
-            lanzador, configuración y credenciales.</p>
+          <div class="body"><p>Desde la carpeta <code>CastNix</code>: <code>./uninstall.sh</code>. Borra todo, incluidas la configuración y el emparejamiento.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AVANZADO ================= -->
+  <section style="padding-top:60px">
+    <div class="wrap">
+      <div class="adv rv">
+        <details>
+          <summary>Opciones avanzadas <small>para usuarios con experiencia</small></summary>
+          <div class="adv-body">
+            <h4>Instalador</h4>
+            <div class="tbl"><table>
+              <thead><tr><th>Comando</th><th>Para qué sirve</th></tr></thead>
+              <tbody>
+                <tr><td><code>./install.sh --with-cast</code></td><td>Instala además Google Cast (GNOME Network Displays, por Flatpak).</td></tr>
+                <tr><td><code>./install.sh --target IP</code></td><td>Fija la tele si hay varias o si no se encuentra sola.</td></tr>
+                <tr><td><code>./install.sh --pair</code></td><td>Fuerza un emparejamiento nuevo.</td></tr>
+                <tr><td><code>./install.sh --no-pair</code></td><td>Instala sin emparejar.</td></tr>
+                <tr><td><code>./install.sh --test</code></td><td>Prueba de 20 segundos al terminar.</td></tr>
+                <tr><td><code>./install.sh --no-deps</code></td><td>No toca el gestor de paquetes.</td></tr>
+                <tr><td><code>./install.sh --yes</code></td><td>Sin preguntas (no empareja ni prueba).</td></tr>
+                <tr><td><code>PREFIX=/opt/castnix ./install.sh</code></td><td>Instala los binarios en otra ruta (por defecto <code>~/.local</code>).</td></tr>
+              </tbody>
+            </table></div>
+            <h4>Transmisión</h4>
+            <div class="tbl"><table>
+              <thead><tr><th>Ajuste</th><th>Qué hace</th></tr></thead>
+              <tbody>
+                <tr><td><code>-width</code> / <code>-height</code></td><td>Resolución enviada a la tele.</td></tr>
+                <tr><td><code>-bitrate</code></td><td>Bitrate en kbps; menos bitrate, menos tirones.</td></tr>
+                <tr><td><code>TV_SHARE_TARGET</code></td><td>IP o nombre de la tele.</td></tr>
+                <tr><td><code>TV_SHARE_NAME</code></td><td>Parte del nombre mDNS para elegir la tele.</td></tr>
+                <tr><td><code>TV_SHARE_HOST</code></td><td>Nombre <code>.local</code> que se prueba antes de mDNS.</td></tr>
+                <tr><td><code>TV_SHARE_LOG</code></td><td>Ruta alternativa del registro.</td></tr>
+              </tbody>
+            </table></div>
+            <h4>Diagnóstico y archivos</h4>
+            <div class="term">
+              <div class="term-head"><div class="dots"><i></i><i></i><i></i></div><span>estado</span>
+                <button class="copy" data-copy="check-tv-share.sh
+tail -30 ~/.cache/compartir-tv.log"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h9"/></svg>Copiar</button></div>
+<pre><code><span class="ps">$ </span><span class="p">check-tv-share.sh</span>                   <span class="c"># extensión, IP de la tele y AirPlay</span>
+<span class="ps">$ </span><span class="p">tail</span> -30 ~/.cache/compartir-tv.log   <span class="c"># motivo del último intento</span></code></pre>
+            </div>
+            <p style="color:var(--muted);font-size:.9rem;margin:16px 0 0">Se instala en <code>~/.local/bin</code> (<code>doubletake</code>, <code>compartir-tv</code>, <code>check-tv-share.sh</code>). Credenciales en <code>~/.config/doubletake/credentials.json</code> (permisos 600). Puertos: <code>7000/tcp</code> para AirPlay, <code>8009/tcp</code> para Cast.</p>
           </div>
         </details>
       </div>
@@ -1259,24 +785,18 @@ tail -30 ~/.cache/compartir-tv.log">Copiar</button>
   <!-- ================= CIERRE ================= -->
   <section class="closing">
     <div class="wrap">
-      <p class="eyebrow" style="justify-content:center">Pruébalo</p>
-      <h2>Un comando, un PIN y tu escritorio en la televisión.</h2>
-      <p class="sec-lead">
-        Pensado para GNOME y probado en Fedora con televisores de varias marcas por
-        AirPlay 2 y Google Cast. También cubre Debian/Ubuntu y Arch.
-      </p>
-      <div class="actions">
-        <a class="btn btn-primary" href="https://github.com/GMR027/CastNix" target="_blank" rel="noopener">Ver en GitHub ↗</a>
-        <a class="btn btn-ghost" href="#instalar">Ver la instalación</a>
-      </div>
-      <div class="install-box">
-        <div class="ib-head">
-          <div class="tl"><i></i><i></i><i></i></div>
-          <span>todo en uno</span>
-          <button class="copy" data-copy="git clone https://github.com/GMR027/CastNix.git && cd CastNix && ./install.sh">Copiar</button>
+      <div class="closing-box rv">
+        <h2>Tu escritorio en la tele,<br><span class="grad">en dos minutos.</span></h2>
+        <p class="sec-lead">Abre una terminal y pega esto. Funciona en Ubuntu, Debian, Fedora y Arch con GNOME.</p>
+        <div class="term">
+          <div class="term-head"><div class="dots"><i></i><i></i><i></i></div><span>si ya tienes git</span>
+            <button class="copy" data-copy="git clone https://github.com/GMR027/CastNix.git && cd CastNix && ./install.sh"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h9"/></svg>Copiar</button></div>
+<pre><code><span class="ps">$ </span><span class="p">git clone</span> https://github.com/GMR027/CastNix.git <span class="k">&amp;&amp;</span> <span class="p">cd</span> CastNix <span class="k">&amp;&amp;</span> <span class="p">./install.sh</span></code></pre>
         </div>
-        <pre><code><span class="p">git</span> clone https://github.com/GMR027/CastNix.git &amp;&amp; \
-  <span class="p">cd</span> CastNix &amp;&amp; <span class="p">./</span>install.sh</code></pre>
+        <div class="hero-actions">
+          <a class="btn btn-main" href="#instalar">Guía paso a paso</a>
+          <a class="btn btn-ghost" href="https://github.com/GMR027/CastNix" target="_blank" rel="noopener">Estrella en GitHub ★</a>
+        </div>
       </div>
     </div>
   </section>
@@ -1285,68 +805,83 @@ tail -30 ~/.cache/compartir-tv.log">Copiar</button>
 <footer>
   <div class="wrap">
     <div class="foot">
-      <div class="brand" style="font-size:.98rem">
-        <span class="logo" style="width:27px;height:27px"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M9 21h6M12 17v4"/></svg></span>
-        CastNix
-      </div>
+      <a class="brand" href="#top"><span class="logo" style="width:28px;height:28px"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M9 21h6M12 17v4"/></svg></span>CastNix</a>
       <div class="foot-links">
         <a href="https://github.com/GMR027/CastNix" target="_blank" rel="noopener">Repositorio</a>
-        <a href="https://github.com/GMR027/CastNix/issues" target="_blank" rel="noopener">Problemas</a>
+        <a href="https://github.com/GMR027/CastNix/issues" target="_blank" rel="noopener">Reportar un problema</a>
         <a href="https://github.com/GMR027/CastNix/blob/main/README.md" target="_blank" rel="noopener">README</a>
         <a href="https://github.com/GMR027/CastNix/blob/main/LICENSE" target="_blank" rel="noopener">GPL-3.0</a>
       </div>
     </div>
-    <p class="foot-note">
-      Proyecto independiente, sin relación con Apple, Google ni GNOME. AirPlay es una
-      marca de Apple Inc. y Google Cast de Google LLC. Se distribuye bajo GPL-3.0;
-      <code>doubletake-src/</code> conserva su licencia original. Úsalo solo con
-      dispositivos y contenido que tengas derecho a reproducir.
-    </p>
+    <p>Proyecto independiente, sin relación con Apple, Google ni GNOME. AirPlay es una marca de Apple Inc. y Google Cast de Google LLC.
+    Se distribuye bajo GPL-3.0; <code>doubletake-src/</code> conserva su licencia original. Úsalo solo con dispositivos y contenido que tengas derecho a reproducir.</p>
   </div>
 </footer>
 
 <script>
-  // Copiar bloques de código
+  // Copiar
   document.querySelectorAll('.copy').forEach(btn => {
+    const html = btn.innerHTML;
     btn.addEventListener('click', async () => {
       const text = btn.dataset.copy || '';
+      let ok = true;
       try {
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(text);
-        } else {
+        if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(text);
+        else {
           const ta = document.createElement('textarea');
-          ta.value = text;
-          ta.style.position = 'fixed';
-          ta.style.opacity = '0';
-          document.body.appendChild(ta);
-          ta.select();
-          document.execCommand('copy');
-          ta.remove();
+          ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+          document.body.appendChild(ta); ta.select();
+          ok = document.execCommand('copy'); ta.remove();
         }
-        const old = btn.textContent;
-        btn.textContent = 'Copiado';
-        btn.classList.add('done');
-        setTimeout(() => { btn.textContent = old; btn.classList.remove('done'); }, 1600);
-      } catch (e) {
-        btn.textContent = 'Copia manual';
-        setTimeout(() => { btn.textContent = 'Copiar'; }, 1600);
-      }
+      } catch (e) { ok = false; }
+      btn.textContent = ok ? '¡Copiado!' : 'Selecciona y copia';
+      btn.classList.toggle('done', ok);
+      setTimeout(() => { btn.innerHTML = html; btn.classList.remove('done'); }, 1800);
     });
   });
 
-  // Resalta la sección visible en la navegación
-  const links = [...document.querySelectorAll('.nav-links a[href^="#"]')];
-  const byId = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
-  const spy = new IntersectionObserver(entries => {
-    if (window.scrollY < 300) return;
-    entries.forEach(en => {
-      if (!en.isIntersecting) return;
-      links.forEach(a => { a.style.color = ''; a.style.background = ''; });
-      const a = byId.get(en.target.id);
-      if (a) { a.style.color = 'var(--txt)'; a.style.background = 'rgba(255,255,255,.04)'; }
+  // Pestañas de distribución
+  const tabs = [...document.querySelectorAll('.tab')];
+  function select(tab, focus) {
+    tabs.forEach(t => {
+      const on = t === tab;
+      t.setAttribute('aria-selected', on);
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
     });
-  }, { rootMargin: '-45% 0px -50% 0px' });
-  document.querySelectorAll('main section[id]').forEach(s => spy.observe(s));
+    if (focus) tab.focus();
+  }
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => select(t));
+    t.addEventListener('keydown', e => {
+      const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (d) { e.preventDefault(); select(tabs[(i + d + tabs.length) % tabs.length], true); }
+    });
+  });
+  // Preselecciona la pestaña según el navegador, si se puede adivinar
+  const ua = navigator.userAgent.toLowerCase();
+  if (ua.includes('fedora')) select(document.getElementById('t-fedora'));
+  else if (ua.includes('ubuntu') || ua.includes('debian')) select(document.getElementById('t-ubuntu'));
+
+  // Aparición al hacer scroll
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), { threshold: .12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+  // Terminal de ejemplo: líneas que aparecen una a una
+  const demo = document.getElementById('demo');
+  const lines = [...demo.querySelectorAll('.ln')];
+  if (reduce) lines.forEach(l => l.classList.add('on'));
+  else {
+    const dio = new IntersectionObserver(es => {
+      if (!es[0].isIntersecting) return;
+      dio.disconnect();
+      lines.forEach((l, i) => setTimeout(() => l.classList.add('on'), 250 + i * 320));
+    }, { threshold: .4 });
+    dio.observe(demo);
+  }
 </script>
 </body>
 </html>
