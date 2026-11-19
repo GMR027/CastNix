@@ -178,11 +178,20 @@ class TvIndicator extends QuickSettings.SystemIndicator {
         this._toggle = new TvToggle();
         this.quickSettingsItems.push(this._toggle);
     }
+
+    destroy() {
+        // GNOME reparenta los quickSettingsItems a la rejilla del menú rápido,
+        // así que no son hijos de este indicador: hay que destruirlos a mano.
+        // Si no, al desactivar la extensión el botón queda huérfano y al
+        // volver a activarla aparece duplicado (p. ej. al bloquear la sesión).
+        this.quickSettingsItems.forEach(item => item.destroy());
+        super.destroy();
+    }
 });
 
 export default class TvShareExtension extends Extension {
     enable() {
-        log('[tv-share] build 4 cargado');
+        log('[tv-share] build 5 cargado');
         this._indicator = new TvIndicator();
         Main.panel.statusArea.quickSettings.addExternalIndicator(this._indicator);
     }
